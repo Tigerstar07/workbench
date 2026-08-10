@@ -1,0 +1,35 @@
+{
+  "name": "@roberts/openclaw-trading-ops",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "plugin:build": "npm run build && openclaw plugins build --root . --entry ./dist/index.js",
+    "plugin:check": "npm run build && openclaw plugins build --root . --entry ./dist/index.js --check",
+    "plugin:validate": "openclaw plugins validate --root . --entry ./dist/index.js"
+  },
+  "dependencies": {
+    "typebox": "^1.2.16"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.6.8"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.6.8",
+      "minGatewayVersion": ">=2026.6.8"
+    }
+  }
+}

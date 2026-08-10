@@ -1,0 +1,26 @@
+{
+  "id": "roberts-trading-ops",
+  "name": "Roberts Trading Ops",
+  "description": "Read-only operational tools for the local momentum radar and Alpaca paper bot.",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "description": "Loopback URL for the local momentum radar and Alpaca paper bot.",
+        "default": "http://127.0.0.1:5173"
+      }
+    }
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "contracts": {
+    "tools": [
+      "trading_radar_snapshot",
+      "trading_bot_status",
+      "trading_research_report"
+    ]
+  }
+}
