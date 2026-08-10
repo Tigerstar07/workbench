@@ -674,13 +674,13 @@ function App() {
             <Mail size={16} />
             roberts@lords.id.lv
           </a>
-          <a href="#" aria-label="GitHub placeholder">
+          <a href="https://github.com/Tigerstar07" target="_blank" rel="noreferrer">
             <GitBranch size={16} />
-            GitHub placeholder
+            GitHub
           </a>
-          <a href="#" aria-label="CV placeholder">
+          <a href="https://roberts-web-studio.pages.dev/" target="_blank" rel="noreferrer">
             <FileText size={16} />
-            CV placeholder
+            Portfolio site
           </a>
         </div>
       </footer>
