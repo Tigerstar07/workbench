@@ -293,7 +293,7 @@ function buildReport(meta: { url: string; profile: string }, findings: Finding[]
     )
     .join('\n')
 
-  return `# Project Dawn, Passive Assessment
+  return `# Project Dawn: Passive Assessment
 **Target:** ${meta.url}
 **Profile:** ${meta.profile} (passive only · no exploit payloads)
 **Risk score:** ${score}/100, Grade ${grade.grade} (${grade.label})
