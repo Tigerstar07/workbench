@@ -410,7 +410,7 @@ Ask me about any specific country or location!
 • **Formula:** \`Market Cap = Share Price × Total Outstanding Shares\`
 • **Bands:**
   - **Large Cap:** $10B+ (e.g. AAPL, MSFT, NVDA)
-  - **Mid Cap:** $2B, $10B
+  - **Mid Cap:** $2B to $10B
   - **Small / Micro Cap:** Under $2B
 
 ---
