@@ -6,7 +6,7 @@
 //
 // Keys: generate an HMAC_SHA256 key at https://testnet.binance.vision (login with
 // GitHub), then put them in .env.local as BINANCE_TESTNET_API_KEY / _API_SECRET.
-// I cannot create the account or the keys for you — that is yours to do.
+// I cannot create the account or the keys for you, that is yours to do.
 //
 // Docs: https://developers.binance.com/docs/binance-spot-api-docs/testnet
 import { createHmac } from 'node:crypto'
@@ -182,7 +182,7 @@ function fillFromOrder(base: string, symbol: string, order: BinanceOrderResp): B
   return { orderId: order.orderId, base, symbol, qty, avgPrice: qty > 0 ? quote / qty : 0, quote }
 }
 
-// Market BUY by USDT amount (quoteOrderQty) — fills synchronously; the response
+// Market BUY by USDT amount (quoteOrderQty), fills synchronously; the response
 // carries the executed qty + average fill price.
 export async function placeBinanceMarketBuy(base: string, quoteUsdt: number, clientOrderId?: string): Promise<BinanceFill> {
   const symbol = mapBaseToBinanceSymbol(base)
@@ -192,7 +192,7 @@ export async function placeBinanceMarketBuy(base: string, quoteUsdt: number, cli
   return fillFromOrder(base, symbol, await binanceSignedRequest<BinanceOrderResp>('/api/v3/order', params, 'POST'))
 }
 
-// Market SELL a base quantity (floored to LOT_SIZE) — closes a held position.
+// Market SELL a base quantity (floored to LOT_SIZE), closes a held position.
 export async function placeBinanceMarketSell(base: string, qty: number, clientOrderId?: string): Promise<BinanceFill> {
   const symbol = mapBaseToBinanceSymbol(base)
   if (!symbol) throw new Error(`No Binance symbol for base "${base}".`)

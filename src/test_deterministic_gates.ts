@@ -241,7 +241,7 @@ assert(
 
 // 4. Reversion auto-blocker: a large-cap VWAP-reclaim candidate is BELOW VWAP and
 // far from the high by design, so the momentum-only gates (micro pullback, near-
-// high rVol, fading tape) must NOT block it — but the volatile-open guard stays.
+// high rVol, fading tape) must NOT block it, but the volatile-open guard stays.
 const reversionCandidate: MomentumCandidate = {
   ...mockCandidate,
   ticker: 'PLTR',
@@ -253,7 +253,7 @@ const reversionCandidate: MomentumCandidate = {
   vwapExtensionPct: -2.1,
   aboveVwap: false,
   highOfDay: 147,
-  distanceFromHighPct: 4.8, // far from high — would trip momentum gates
+  distanceFromHighPct: 4.8, // far from high, would trip momentum gates
   changePct: -2.0,
   fifteenMinuteMovePct: 0.1, // turning back up (reclaim)
   intradayRsi: 33,
@@ -501,7 +501,7 @@ assert(
 
 // Net reward:risk floor: a wide-stop setup whose +1.8% target clears the fee-drag
 // and absolute-floor gates but, on a 4% stop, nets only ~0.29R after the 0.65%
-// round trip — far below the 0.7R minimum — so it is still blocked.
+// round trip, far below the 0.7R minimum, so it is still blocked.
 assert(
   cryptoNetEdgeBlocker(cryptoCandidate, { trigger: 100, stop: 96, target1: 101.8, target2: 104, mode: 'breakout' })?.includes(
     'R minimum',
@@ -509,8 +509,8 @@ assert(
   'A crypto entry whose post-fee reward is a small fraction of its risk should be blocked',
 )
 
-// Viable: +3% target on a 2% stop nets ~2.55% after the 0.45% round trip — well
-// clear of every threshold — so it stays tradable.
+// Viable: +3% target on a 2% stop nets ~2.55% after the 0.45% round trip, well
+// clear of every threshold, so it stays tradable.
 assert(
   cryptoNetEdgeBlocker(cryptoCandidate, { trigger: 100, stop: 98, target1: 103, target2: 106, mode: 'breakout' }) === null,
   'A crypto entry that stays net-positive after the full modeled round trip should remain tradable',

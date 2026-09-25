@@ -69,7 +69,7 @@ export type SignalEvent = {
 }
 
 // The smoothed, time-aware signal state attached to a candidate by the radar's
-// stabilization layer. The paper bot does NOT use this — it keeps reacting to
+// stabilization layer. The paper bot does NOT use this, it keeps reacting to
 // the raw, instantaneous score so it stays stricter and independent.
 export type SignalStability = {
   phase: SignalPhase
@@ -177,8 +177,8 @@ export type MomentumCandidate = {
   // Which strategy produced this candidate. Undefined is treated as 'momentum'
   // everywhere, so all existing momentum code is unchanged; only the
   // mean-reversion builder sets 'reversion'. A reversion candidate is, by
-  // definition, BELOW VWAP and far from the high — the opposite of a momentum
-  // setup — so the bot/radar branch on this tag instead of bending the scorer.
+  // definition, BELOW VWAP and far from the high, the opposite of a momentum
+  // setup, so the bot/radar branch on this tag instead of bending the scorer.
   strategy?: 'momentum' | 'reversion'
   // Intraday oversold/structure context computed from the 5m chart, used by the
   // mean-reversion path (RSI gate + swing-low stop). Optional so momentum and
@@ -505,11 +505,11 @@ export const MOMENTUM_RULES = {
   crypto: {
     minMovePct: 3,
     minFourHourMovePct: 1.2,
-    minQuoteVolume: 20_000_000, // shortlist floor — below this it isn't even watched
+    minQuoteVolume: 20_000_000, // shortlist floor, below this it isn't even watched
     // Buy-confirmation liquidity floor. Higher than the shortlist floor so a BUY is
     // a stricter bar than mere inclusion, but well below the old $50M: the bot's
     // size is tiny, spread is gated separately (maxSpreadPct), so this only needs to
-    // screen out spoofable thin-book pumps — not guarantee fill depth. Tune here.
+    // screen out spoofable thin-book pumps, not guarantee fill depth. Tune here.
     minConfirmationQuoteVolume: 30_000_000,
     minVolumePulse: 1.15,
     maxDistanceFromHighPct: 7,
@@ -527,12 +527,12 @@ const STOCK_SCREENERS = ['day_gainers', 'small_cap_gainers', 'most_actives']
 // Curated liquid large caps we always watch for a controlled "buy the stretched
 // dip back to VWAP" setup (the honest version of "Palantir/ASML will bounce").
 // ASML/SAP etc. trade as US ADRs the bot can already execute (see US_LISTED_ADRS).
-// Editable — these are scanned by symbol regardless of any screener.
+// Editable, these are scanned by symbol regardless of any screener.
 const MEGACAP_REVERSION_SYMBOLS = [
   'PLTR', 'ASML', 'NVDA', 'AAPL', 'MSFT', 'META', 'GOOGL', 'AMZN', 'AMD', 'TSLA',
   'NFLX', 'AVGO', 'CRM', 'ADBE', 'COST', 'NVO', 'SAP',
 ]
-// Dynamic discovery floor: only fade large, liquid decliners (not small caps —
+// Dynamic discovery floor: only fade large, liquid decliners (not small caps, 
 // those are knives). Used to filter the day_losers screener.
 const REVERSION_MIN_MARKET_CAP = 10_000_000_000
 const REVERSION_DISCOVERY_LIMIT = 8
@@ -1075,7 +1075,7 @@ function validateStockQuote({
   // A missing independent cross-check is no longer a hard error: the stock
   // still surfaces on the dashboard as UNVERIFIED (and the paper bot, which
   // requires VERIFIED, will simply never auto-enter it). DATA ERROR is reserved
-  // for clearly broken data — a large source mismatch, a sub-$5 conflict, or a
+  // for clearly broken data, a large source mismatch, a sub-$5 conflict, or a
   // stale/absent live quote during market hours.
   if (diffPct !== null && diffPct > STOCK_PRICE_TOLERANCE_PCT) {
     dataError = `price mismatch ${diffPct.toFixed(1)}% vs ${effectiveSecondary?.source ?? 'secondary source'}`
@@ -1706,7 +1706,7 @@ function analyzeMicroPullback({
   // A reclaim is still live (not only on the single break bar) while the current bar
   // is green/flat and price is holding at/above the pause-high trigger. This is the
   // precision-neutral persistence: it never lights a pullback that has not reclaimed
-  // (price < trigger stays FORMING) nor a red/reversing bar — it only stops a held
+  // (price < trigger stays FORMING) nor a red/reversing bar, it only stops a held
   // breakout from flickering off through its follow-through.
   const reclaimHolding = pullbackEnd < lastIndex && last.close >= last.open && price >= trigger
   let state: MicroPullbackState = 'FORMING'
@@ -2004,7 +2004,7 @@ async function fetchStockChart(symbol: string): Promise<ChartResult | null> {
 
 // Maps an already-fetched Yahoo chart into the secondary-quote shape so it can
 // serve as an independent cross-check for Alpaca-primary stock candidates when
-// CNBC is unavailable. Reuses the existing chart fetch — no new endpoint.
+// CNBC is unavailable. Reuses the existing chart fetch, no new endpoint.
 function yahooSecondaryFromChart(chart: ChartResult | null, now: Date): SecondaryStockQuote | null {
   const meta = chart?.meta
   const price = safeNumber(meta?.regularMarketPrice)
@@ -2545,7 +2545,7 @@ async function buildAlpacaStockCandidates(now: Date): Promise<RawCandidate[]> {
         })),
         fetchStockChart(mover.symbol).catch(() => null),
       ])
-      // Independent fallback cross-check (Yahoo) for when CNBC is unavailable —
+      // Independent fallback cross-check (Yahoo) for when CNBC is unavailable, 
       // Alpaca is the primary price here, so Yahoo stays a genuine second source.
       const yahooSecondary = yahooSecondaryFromChart(chart, now)
       const chartMetrics = chartStats(chart)
@@ -2731,7 +2731,7 @@ async function buildStockCandidates(now: Date): Promise<RawCandidate[]> {
 
 // A curated set of liquid, well-known European blue-chips (Yahoo symbols). They
 // surface on the radar as a *discovery* feed during European hours, sourced from
-// Yahoo Finance (free, no key — the same endpoint the US fallback already uses).
+// Yahoo Finance (free, no key, the same endpoint the US fallback already uses).
 // They come through UNVERIFIED (there is no independent second price source for
 // non-US names), so the paper bot never auto-enters them; Alpaca can only execute
 // the US ADR (e.g. ASML, SAP) and only during US hours. This is for finding good
@@ -2781,7 +2781,7 @@ async function buildEuropeanStockCandidates(now: Date): Promise<RawCandidate[]> 
     // Free European feeds are ~15 min delayed, which trips the US real-time
     // staleness check and wrongly flags an otherwise-clean (CNBC-cross-checked)
     // quote as DATA ERROR. These are discovery rows the bot never trades, so a
-    // stale-ONLY error is downgraded to UNVERIFIED — the row stays visible and
+    // stale-ONLY error is downgraded to UNVERIFIED, the row stays visible and
     // can read as a live trend, while staying out of the bot's VERIFIED-only path.
     const staleOnly = candidate.dataError != null && /stale by .* during market hours/.test(candidate.dataError)
     const normalized = staleOnly
@@ -2803,7 +2803,7 @@ async function buildEuropeanStockCandidates(now: Date): Promise<RawCandidate[]> 
 // gated) so the bot can ACTUALLY trade the name during US hours. OTC-only ADRs
 // (Siemens/SIEGY, LVMH/LVMUY, Nestle/NSRGY, ...) are deliberately excluded since
 // Alpaca execution on them is unreliable. The ADR trades on its OWN US-session
-// momentum — not the EU line's signal (different session, FX, and ADR ratio).
+// momentum, not the EU line's signal (different session, FX, and ADR ratio).
 const US_LISTED_ADRS: Array<{ adr: string; home: string; name: string; exchange: string }> = [
   { adr: 'ASML', home: 'ASML.AS', name: 'ASML Holding', exchange: 'NASDAQ' },
   { adr: 'SAP', home: 'SAP.DE', name: 'SAP SE', exchange: 'NYSE' },
@@ -2816,7 +2816,7 @@ const US_LISTED_ADRS: Array<{ adr: string; home: string; name: string; exchange:
 ]
 
 async function buildAdrStockCandidates(now: Date): Promise<RawCandidate[]> {
-  // Only worth the API calls during the US weekday session window — the bot can
+  // Only worth the API calls during the US weekday session window, the bot can
   // only execute the ADR during US OPEN; pre/after-hours let the rows warm up.
   // Omitting marketState lets buildStockCandidate compute the REAL US session, so
   // these gate (and force to IGNORE when closed) exactly like any other US stock.
@@ -2849,8 +2849,8 @@ async function buildAdrStockCandidates(now: Date): Promise<RawCandidate[]> {
 }
 
 // ---- mean-reversion signal + scoring --------------------------------------
-// A reversion candidate is BELOW VWAP and far from the high — the inverse of a
-// momentum setup — so it gets its own signal plan + scorer and is never routed
+// A reversion candidate is BELOW VWAP and far from the high, the inverse of a
+// momentum setup, so it gets its own signal plan + scorer and is never routed
 // through scoreCandidate. The plan is a controlled long back to the mean: enter
 // on a small reclaim above the stretched price, stop below the intraday swing low
 // (risk-capped), first target = VWAP, second target a touch beyond.
@@ -2883,7 +2883,7 @@ function buildReversionSignalPlan(raw: RawCandidate, status: MomentumStatus): Si
     raw.intradayLow !== null && raw.intradayLow !== undefined && raw.intradayLow > 0 && raw.intradayLow < ref
       ? raw.intradayLow
       : ref * 0.985
-  // Structural stop just under the swing low, but never risk more than ~2% — the
+  // Structural stop just under the swing low, but never risk more than ~2%, the
   // tighter (higher) of the two so a deep low can't blow the risk budget.
   const stopLoss = roundPrice(Math.max(swingLow * 0.999, trigger * 0.98), ref)
   const risk = stopLoss !== null ? Math.max(trigger - stopLoss, 0) : 0
@@ -2896,7 +2896,7 @@ function buildReversionSignalPlan(raw: RawCandidate, status: MomentumStatus): Si
     return {
       action: 'BUY',
       label: 'RECLAIM BUY',
-      thesis: `Model opinion: ${raw.displaySymbol} is stretched below VWAP and turning up — controlled paper-buy on a reclaim through ${formatSignalPrice(trigger)} toward VWAP ${formatSignalPrice(vwap)}.`,
+      thesis: `Model opinion: ${raw.displaySymbol} is stretched below VWAP and turning up, controlled paper-buy on a reclaim through ${formatSignalPrice(trigger)} toward VWAP ${formatSignalPrice(vwap)}.`,
       entryTrigger: trigger,
       entryZoneLow: roundPrice(ref * 0.999, ref),
       entryZoneHigh: roundPrice(trigger * 1.002, ref),
@@ -2912,7 +2912,7 @@ function buildReversionSignalPlan(raw: RawCandidate, status: MomentumStatus): Si
   return {
     action: 'WAIT',
     label: 'WAIT FOR RECLAIM',
-    thesis: `Model opinion: ${raw.displaySymbol} is stretched below VWAP but not turning yet — buy only a confirmed reclaim through ${formatSignalPrice(trigger)}.`,
+    thesis: `Model opinion: ${raw.displaySymbol} is stretched below VWAP but not turning yet, buy only a confirmed reclaim through ${formatSignalPrice(trigger)}.`,
     entryTrigger: trigger,
     entryZoneLow: roundPrice(ref * 0.999, ref),
     entryZoneHigh: roundPrice(trigger * 1.002, ref),
@@ -2985,7 +2985,7 @@ function scoreReversionCandidate(raw: RawCandidate, now: Date): MomentumCandidat
     return finalize('IGNORE', 0)
   }
   if (raw.changePct <= REVERSION.maxAdverseDayChangePct) {
-    blockers.push(`down ${raw.changePct.toFixed(1)}% on the day — too weak to fade`)
+    blockers.push(`down ${raw.changePct.toFixed(1)}% on the day, too weak to fade`)
     return finalize('IGNORE', 0)
   }
   if (raw.dataQuality !== 'VERIFIED') blockers.push('stock price not verified')
@@ -3473,8 +3473,8 @@ function scoreCandidate(raw: RawCandidate, now: Date): MomentumCandidate {
   // unaffected, and pre-market / after-hours stocks still show.
   if (raw.assetClass === 'stock' && (raw.marketStatus === 'WEEKEND' || raw.marketStatus === 'CLOSED')) {
     status = 'IGNORE'
-    if (!blockers.includes('stock market closed — no live tape')) {
-      blockers.push('stock market closed — no live tape')
+    if (!blockers.includes('stock market closed, no live tape')) {
+      blockers.push('stock market closed, no live tape')
     }
   }
 
@@ -4029,16 +4029,16 @@ export async function buildMomentumSnapshot(
   // Stocks are fetched every day, including weekends. When the US market is
   // closed (weekend / overnight) scoreCandidate force-sets every stock to
   // IGNORE with a "market closed" blocker, so they can never appear as a live
-  // signal — but they still flow through as NO-TRADE preview rows so the trade
+  // signal, but they still flow through as NO-TRADE preview rows so the trade
   // list can be reviewed before the next open. At the open the same pipeline
   // yields real WATCH/CHECK NOW signals with no further change.
   const [stocks, adrStocks, europeanStocks, crypto, reversion] = await Promise.all([
     buildStockCandidates(now).catch(() => []),
-    // US-listed ADRs of the European blue-chips — scanned as normal US stocks so
+    // US-listed ADRs of the European blue-chips, scanned as normal US stocks so
     // the bot can actually trade the name during US hours (see US_LISTED_ADRS).
     buildAdrStockCandidates(now).catch(() => []),
     // Curated European blue-chips for discovery during European hours (display
-    // only; UNVERIFIED so the bot never auto-enters them — see EUROPEAN_STOCKS).
+    // only; UNVERIFIED so the bot never auto-enters them, see EUROPEAN_STOCKS).
     buildEuropeanStockCandidates(now).catch(() => []),
     // Keep the entire application Alpaca/stocks-only unless crypto is explicitly
     // enabled. This prevents the radar from making hidden Binance requests while

@@ -548,7 +548,7 @@ export function maybeNotifyDiscordSignal(candidate: MomentumCandidate) {
   const strict = true
   enqueue({
     title: `${strict ? '📡 CHECK NOW' : '👀 WATCH'} · ${candidate.displaySymbol}`,
-    description: compact(`${candidate.company} — ${candidate.signal.thesis}`),
+    description: compact(`${candidate.company}, ${candidate.signal.thesis}`),
     color: strict ? GREEN : AMBER,
     fields: [
       { name: 'Price / move', value: `${price(candidate.price)} · ${percent(candidate.changePct)}`, inline: true },
@@ -561,7 +561,7 @@ export function maybeNotifyDiscordSignal(candidate: MomentumCandidate) {
         name: 'Important',
         value: strict
           ? 'Signal only. The deterministic bot still checks spread, confirmation, buying power, duplication, and broker acceptance.'
-          : 'Watch only—not an entry. Wait for CHECK NOW and the bot execution gates.',
+          : 'Watch only, not an entry. Wait for CHECK NOW and the bot execution gates.',
       },
     ],
     timestamp: new Date().toISOString(),

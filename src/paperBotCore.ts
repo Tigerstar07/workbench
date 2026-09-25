@@ -1,6 +1,6 @@
 // Server-side paper-trading bot. Runs inside the Vite dev/preview server (see
 // vite.config.ts) so it keeps watching for signals on a fixed cadence for as
-// long as the server process is alive — independent of any open browser tab.
+// long as the server process is alive, independent of any open browser tab.
 //
 // It reuses the momentum engine for signals and routes real stock orders to the
 // Alpaca *paper* trading API (paper-api.alpaca.markets). Crypto defaults to the
@@ -104,7 +104,7 @@ const MAKER_SHADOW_MARKOUT_MS = [1_000, 5_000, 10_000] as const
 // ---- realistic cost model -------------------------------------------------
 // Alpaca *paper* fills are idealized: they fill at the quote with no spread to
 // cross, no slippage and no fees. Live retail momentum scalping pays all three
-// on every round trip — which is exactly where a "green on paper, red live" gap
+// on every round trip, which is exactly where a "green on paper, red live" gap
 // comes from. We never touch the broker's reported P&L (that is the paper truth);
 // we model what a live fill would have cost and surface a *net-of-cost* P&L next
 // to it. If net expectancy is not positive over a large sample, no gate tuning
@@ -115,7 +115,7 @@ const COST_MODEL_DEFAULTS = {
   stockFeeBps: 0, // Alpaca stocks are commission-free; regulatory fees ~0
   // The bot routes crypto as MARKET orders, which always cross the book as a
   // *taker*. Alpaca's Tier-1 (<$100k 30d volume) crypto taker fee is 0.25% per
-  // leg — NOT the 0.15% maker rate. Modeling the maker rate would understate the
+  // leg, NOT the 0.15% maker rate. Modeling the maker rate would understate the
   // round trip by ~0.20% and let the fee-aware entry gate wave through trades that
   // are actually net losers. So we charge the real 25 bps taker fee per leg.
   cryptoFeeBps: 25, // Alpaca crypto Tier-1 TAKER fee, per leg (0.25%)
@@ -165,7 +165,7 @@ const ALLOWED_RISK_BLOCKERS = new Set([
 //  - "turbo"  a deliberately loose "for fun" mode: it drops the WATCH-quality
 //             gate and re-buys constantly, so you see lots of paper trades
 //             (more wins AND more losses). Still stop/target
-//             managed — just far more aggressive. Not a serious strategy.
+//             managed, just far more aggressive. Not a serious strategy.
 export type BotMode = 'safe' | 'active' | 'turbo'
 
 // Your "super good and safe" shortlist (Binance base symbols). In Alpaca crypto
@@ -331,7 +331,7 @@ const BOT_MODES: Record<BotMode, BotModeConfig> = {
     trailDistanceR: 0.55,
     atrTrailMultiple: 2.2,
     turboVwapBypassMaxDistancePct: 0.7,
-    // Was 1.3 — but the trade log shows every sub-2x-pulse entry lost (0 wins in
+    // Was 1.3, but the trade log shows every sub-2x-pulse entry lost (0 wins in
     // 13). Hold the VWAP-bypass path to the same 2x+ pulse bar as the main gate so
     // nothing weak sneaks in through the bypass.
     turboVwapBypassMinPulse: 2.0,
@@ -417,14 +417,14 @@ function entryFloorLabel() {
 // VWAP after the US close so the bot kept scalping overnight. The trade log showed
 // that "stay busy" loosening *was* the bleed: weak-pulse, far-from-VWAP overnight
 // probes are the net-negative buckets. So night mode no longer weakens the pulse
-// requirement, and it chases VWAP far less. The bot may sit idle on quiet nights —
+// requirement, and it chases VWAP far less. The bot may sit idle on quiet nights, 
 // that's the point: no genuine 2x+ surge, no trade. The `changePct > 0` (24h
 // uptrend) gate in isTurboCryptoProbe still prevents buying anything red on the day.
 function nightVwapBypassMaxDistancePct() {
   return nightCryptoActive() ? Math.max(cfg().turboVwapBypassMaxDistancePct, 1.0) : cfg().turboVwapBypassMaxDistancePct
 }
 function nightVwapBypassMinPulse() {
-  // No overnight discount on the bypass-pulse bar — far-from-VWAP entries must show
+  // No overnight discount on the bypass-pulse bar, far-from-VWAP entries must show
   // the same genuine pulse strength they do during the day.
   return cfg().turboVwapBypassMinPulse
 }
@@ -750,7 +750,7 @@ type TrackedEntry = {
   atr: number | null
   // Low-water mark since entry, the mirror of peakPrice. Together they let us
   // record how far each trade ran in our favor (MFE) and against us (MAE) before
-  // it closed — the one diagnostic that separates "entries are wrong" from
+  // it closed, the one diagnostic that separates "entries are wrong" from
   // "stops too tight / targets too far" when targets never get hit.
   troughPrice: number
   lastStopRaisedAt: number
@@ -1964,7 +1964,7 @@ export function newYorkMinutesNow(now = new Date()): number {
 
 // ---- scheduled macro-event blackout ---------------------------------------
 // High-impact US data prints (FOMC decisions, CPI, NFP) blow out spreads, gap
-// price through stops, and whipsaw the first minutes — a tight cluster of
+// price through stops, and whipsaw the first minutes, a tight cluster of
 // negative-expectancy fills the live-cost gate can't see coming (it trusts the
 // last *calm* spread). These events sit on a fixed calendar, so the bot just
 // stands aside: NEW entries pause for a short window around each print while open
@@ -1981,7 +1981,7 @@ const FOMC_DECISION_DATES_ET = [
   '2026-07-29', '2026-09-16', '2026-10-28', '2026-12-09',
 ]
 
-// UTC offset (minutes) of America/New_York at `at` — 240 (EDT) or 300 (EST).
+// UTC offset (minutes) of America/New_York at `at`, 240 (EDT) or 300 (EST).
 function newYorkOffsetMinutes(at: Date): number {
   const asUtc = new Date(at.toLocaleString('en-US', { timeZone: 'UTC' }))
   const asEt = new Date(at.toLocaleString('en-US', { timeZone: 'America/New_York' }))
@@ -2306,7 +2306,7 @@ async function cachedRead<T>(cache: ReadCache<T>, ttlMs: number, loader: () => P
 function recordTradeExitCooldown(normalized: string, pending: PendingExit) {
   const symbol = pending.symbol
   // Paper USED to skip this entirely, which is what let turbo churn a single coin
-  // overnight — buy, lose-VWAP/scratch, instantly re-buy, repeat — bleeding the
+  // overnight, buy, lose-VWAP/scratch, instantly re-buy, repeat, bleeding the
   // spread on every round trip. Paper now gets a lighter cooldown so it stops
   // re-buying the SAME symbol immediately (it can still trade other coins), while
   // live keeps its stricter day-lock schedule.
@@ -2325,7 +2325,7 @@ function recordTradeExitCooldown(normalized: string, pending: PendingExit) {
   }
 
   // Win OR scratch (pnl >= 0). The "lost VWAP" scratch exits sit at ~0, and used
-  // to set no cooldown at all on paper — the exact overnight churn path. Always
+  // to set no cooldown at all on paper, the exact overnight churn path. Always
   // impose at least a short diversity cooldown so a scratch can't re-arm instantly.
   const winCd = paper ? PAPER_REENTRY_SCRATCH_COOLDOWN_MS : WIN_REENTRY_COOLDOWN_MS
   setTradeCooldown(symbol, `recent exit cooldown for diversity (${botPrice(pending.pnl)})`, Date.now() + winCd)
@@ -2477,7 +2477,7 @@ function diagnoseMode(mode: BotMode): BotDiagnostics {
   const losses = closed.filter((entry) => (entry.pnl ?? 0) < 0)
   const grossWin = wins.reduce((total, entry) => total + (entry.pnl ?? 0), 0)
   const grossLoss = Math.abs(losses.reduce((total, entry) => total + (entry.pnl ?? 0), 0))
-  // Net of the modeled live-execution cost — the read that actually matters.
+  // Net of the modeled live-execution cost, the read that actually matters.
   const estimatedCost = closed.reduce((total, entry) => total + historyEntryCost(entry), 0)
   const netRealizedPl = realizedPl - estimatedCost
   const netExpectancy = netRealizedPl / closed.length
@@ -2522,7 +2522,7 @@ function diagnoseMode(mode: BotMode): BotDiagnostics {
     notes.unshift(
       `Net of modeled costs (${botPrice(estimatedCost)} total spread+slippage+fees): expectancy ${botPrice(
         netExpectancy,
-      )}/trade, realized ${botPrice(netRealizedPl)} — ${verdict}. This is the live-realistic read; gross paper P&L overstates it.`,
+      )}/trade, realized ${botPrice(netRealizedPl)}, ${verdict}. This is the live-realistic read; gross paper P&L overstates it.`,
     )
   }
 
@@ -3723,7 +3723,7 @@ async function submitBuy(
 ): Promise<number> {
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   // Safe/active dedupe one entry per symbol per day. Turbo appends a unique
-  // stamp so it can re-buy the same symbol after a position closes — that is
+  // stamp so it can re-buy the same symbol after a position closes, that is
   // what produces the constant stream of trades.
   const stamp = cfg().relaxStatusGate ? `-${Date.now().toString(36)}` : ''
   const clientOrderId = `mbot-${normSymbol(resolved.symbol)}-${today}${stamp}`
@@ -4031,7 +4031,7 @@ async function submitClose(position: BotPosition, reason: string) {
   if (position.assetClass === 'stock' && isExtendedHoursNow()) {
     // Market closes (DELETE /positions) are rejected outside RTH; submit a
     // marketable extended-hours LIMIT sell instead. In thin pre/after-hours books
-    // this can fail to fill if price gaps through the limit — the next tick retries.
+    // this can fail to fill if price gaps through the limit, the next tick retries.
     const refPrice = position.currentPrice > 0 ? position.currentPrice : position.avgEntry
     const body: Record<string, string | number | boolean> = {
       symbol: position.symbol,
@@ -4281,7 +4281,7 @@ function stockLivePulseBlocker(candidate: MomentumCandidate): string | null {
 
 // Bot-only stock auto-entry checks that intentionally do NOT touch the radar:
 // the dashboard can still show these rows; the bot just won't buy them. This is
-// where execution stays strict — a fresh live quote (seconds, not the 5-minute
+// where execution stays strict, a fresh live quote (seconds, not the 5-minute
 // UI tolerance) and a tight spread, with a cents floor so a cheap stock's wide
 // absolute spread is caught even when the percentage looks small.
 // Reversion has the inverse shape of momentum (below VWAP, far from the high), so
@@ -4388,7 +4388,7 @@ export function costAwareEntryBlocker(candidate: MomentumCandidate, plan: BotTra
 // ---- crypto fee-first entry gate ------------------------------------------
 // A crypto round trip pays a taker fee on BOTH legs (Binance ~0.10%/leg,
 // Alpaca Tier-1 ~0.25%/leg) PLUS slippage and the spread we cross. On the small,
-// fast moves the scanner surfaces, those costs can quietly eat the entire edge —
+// fast moves the scanner surfaces, those costs can quietly eat the entire edge, 
 // the classic "green gross, red net" trap. The universal costAwareEntryBlocker above only asks
 // that target1 is theoretically reachable above cost; it does NOT guarantee the
 // trade still pays after the full round trip.
@@ -4434,7 +4434,7 @@ export function cryptoNetEdgeBlocker(candidate: MomentumCandidate, plan: BotTrad
   if (netTarget1Pct + 1e-9 < policy.netFloorPct) {
     return `crypto fee gate: net first-target edge +${netTarget1Pct.toFixed(2)}% after ${costPct.toFixed(2)}% cost is below the ${policy.netFloorPct}% floor`
   }
-  // 3) Net reward:risk — after fees, the first target must still pay at least
+  // 3) Net reward:risk, after fees, the first target must still pay at least
   //    minNetRR of the risk, keeping the expectancy structure positive.
   if (riskPct > 0 && netTarget1Pct + 1e-9 < riskPct * policy.minNetRR) {
     return `crypto fee gate: net reward ${(netTarget1Pct / riskPct).toFixed(2)}R after ${costPct.toFixed(2)}% cost is below the ${policy.minNetRR}R minimum`
@@ -4485,7 +4485,7 @@ function turboTechnicalBlocker(candidate: MomentumCandidate, plan: BotTradePlan)
   // Daytime, turbo refuses IGNORE rows outright. At night the whole tradable crypto
   // set is usually IGNORE (soft post-close tape), so that blanket block freezes the
   // bot. Allow an IGNORE crypto through ONLY when it is a valid VWAP-pullback probe
-  // (still up on the day, within range of VWAP) — the rest of the gates (edge, pulse,
+  // (still up on the day, within range of VWAP), the rest of the gates (edge, pulse,
   // chase, score floor) and the tight night stop still apply.
   const nightProbeOk = nightCryptoActive() && candidate.assetClass === 'crypto' && isTurboCryptoProbe(candidate)
   if (candidate.status === 'IGNORE' && !nightProbeOk) {
@@ -4498,7 +4498,7 @@ function turboTechnicalBlocker(candidate: MomentumCandidate, plan: BotTradePlan)
     return `Turbo blocks late/deep Fibonacci entries (${technical.fibZone}); waiting for cleaner momentum`
   }
   if (candidate.assetClass === 'stock') {
-    // These stock gates were tightened "after recent stock stop-outs" — but those
+    // These stock gates were tightened "after recent stock stop-outs", but those
     // stop-outs were caused by scalp stops sitting inside the spread, which is now
     // fixed (wider, spread-padded stops). So the over-correction is walked back a
     // step to let near-miss quality setups trade again, without opening the door to
@@ -4813,7 +4813,7 @@ function rememberStickyReversionWatches(shortlist: MomentumCandidate[]) {
 
 function botTriggerPrice(candidate: MomentumCandidate) {
   // Reversion always arms on its reclaim trigger (just above the stretched price),
-  // never at the live price — so a WATCH reversion stays armed until it turns up.
+  // never at the live price, so a WATCH reversion stays armed until it turns up.
   if (isReversionCandidate(candidate)) return candidate.signal.entryTrigger
   if (candidate.status === 'CHECK NOW') return candidate.signal.entryTrigger
   // WATCH probes at the live price; turbo treats any above-VWAP mover the same.
@@ -4913,7 +4913,7 @@ function turboTradePlan(candidate: MomentumCandidate, entryPrice?: number): BotT
     candidate.assetClass === 'stock' ? Math.min(0.01, Math.max(0, (candidate.spreadPct / 100) * 1.5)) : 0
   const stopPct = profile.stopPct + stockSpreadCushion
   let stop = trigger * (1 - stopPct)
-  // Anchor to VWAP only when it sits BELOW the fixed-distance stop — i.e. use it
+  // Anchor to VWAP only when it sits BELOW the fixed-distance stop, i.e. use it
   // to give a strong trend a touch more room, never to tighten the stop up into
   // the spread (which is what manufactured the instant stop-outs).
   if (candidate.aboveVwap && candidate.vwap > 0) {
@@ -6143,7 +6143,7 @@ async function tick() {
       ]),
     )
     // "Tradable now" includes pre-market and after-hours (extended-hours limit
-    // orders), not just 09:30-16:00 RTH — so the bot can act on pre-market movers.
+    // orders), not just 09:30-16:00 RTH, so the bot can act on pre-market movers.
     const stockMarketOpen = isStockTradableNow()
     stockSessionOpenNow = stockMarketOpen // stocks tradable now; drives stocks-first ranking
 
@@ -6224,7 +6224,7 @@ async function tick() {
           // Only bail on a lost-VWAP thesis break when the trade is NOT in real
           // profit. A winning scalp that wicks under VWAP for a tick should ride
           // its trailing stop toward target instead of being dumped at ~breakeven
-          // — that asymmetry (winners cut tiny, losers run to the full stop) was
+          //, that asymmetry (winners cut tiny, losers run to the full stop) was
           // the main reason turbo bled. Losing/flat probes still bail early.
           // Reversion is exempt entirely: being below VWAP IS the setup and VWAP
           // is its target, so it rides its own stop/target instead.
@@ -6302,7 +6302,7 @@ async function tick() {
     // "Armed" = setups that pass every gate and are ready to act on but aren't
     // held/pending yet (in turbo these fire almost immediately). "Triggered" is
     // cumulative entries fired this session, incremented on each accepted buy
-    // below — so the tiles reflect real activity instead of a transient 0.
+    // below, so the tiles reflect real activity instead of a transient 0.
     armedCount = botState.draining
       ? 0
       : shortlist.filter(
@@ -6403,7 +6403,7 @@ async function tick() {
       } catch (error) {
         const text = message(error)
         if (/client_order_id|already exists|422/i.test(text)) {
-          pushLog('skip', resolved.symbol, 'Already ordered today — skipped duplicate')
+          pushLog('skip', resolved.symbol, 'Already ordered today, skipped duplicate')
         } else if (/not fractionable|rejected|403/i.test(text)) {
           setNoFillCooldown(resolved.symbol, `${executionLabel(resolved.venue)} rejected buy: ${text}`, REJECTED_COOLDOWN_MS)
           pushLog(
@@ -6578,7 +6578,7 @@ export function resetBot() {
   persistSetupMemory()
   persistEquitySeries(true)
   // NOTE: the append-only paper-bot-trades.csv dataset is intentionally preserved.
-  pushLog('info', '-', 'Full reset — trade journal, stats, equity curve, and daily data cleared')
+  pushLog('info', '-', 'Full reset, trade journal, stats, equity curve, and daily data cleared')
 }
 
 // ---- Binance-watched fast crypto exits ------------------------------------
@@ -6677,7 +6677,7 @@ function freshBinancePrice(base: string): number | null {
 }
 
 // Runs every few seconds between the slow Alpaca ticks. Closes a crypto position
-// the moment Binance shows its stop or final target breached. Only hard exits —
+// the moment Binance shows its stop or final target breached. Only hard exits, 
 // the main tick still owns trailing stops, lost-VWAP, time stops, and entries.
 async function fastCryptoExitCheck() {
   if (!botState.running) return
@@ -6703,7 +6703,7 @@ async function fastCryptoExitCheck() {
     if (!reason) continue
     try {
       await submitClose(position, reason)
-      serverLog('sell', position.symbol, `${reason} @ ${price} — fast Binance-watched exit`)
+      serverLog('sell', position.symbol, `${reason} @ ${price}, fast Binance-watched exit`)
     } catch (error) {
       pushLog('error', position.symbol, `Fast Binance exit failed: ${message(error)}`)
     }
@@ -6714,7 +6714,7 @@ async function fastCryptoExitCheck() {
 // Alpaca/Binance/network blip that escapes a catch) instead of letting it crash
 // the whole dev server and stop the bot. The bot re-reads broker state every
 // tick, so log-and-continue is safe here. Genuinely fatal uncaughtExceptions
-// are deliberately NOT swallowed — those should crash so the dev:forever supervisor
+// are deliberately NOT swallowed, those should crash so the dev:forever supervisor
 // restarts a clean process (and PAPER_BOT_AUTOSTART re-arms it). Installed once.
 // (process is typed as a minimal browser shim in this tsconfig; cast for `.on`.)
 type ProcessRejectionHook = { on(event: 'unhandledRejection', listener: (reason: unknown) => void): unknown }
@@ -6746,7 +6746,7 @@ function maybeAutostart() {
       serverLog('info', '-', `live autostart blocked; set ALLOW_LIVE_AUTOSTART=${LIVE_TRADING_ACK} only after manual live smoke tests`)
       return
     }
-    serverLog('info', '-', `auto-starting in ${mode} mode (PAPER_BOT_AUTOSTART) — bot resumes itself after a restart`)
+    serverLog('info', '-', `auto-starting in ${mode} mode (PAPER_BOT_AUTOSTART), bot resumes itself after a restart`)
     startBot(mode)
   }
 }

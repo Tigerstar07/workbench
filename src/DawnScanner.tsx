@@ -92,7 +92,7 @@ const TARGETS: ScanTarget[] = [
         tier: 'breach',
         evidence: 'GET /.env -> 200, body contains DB_PASSWORD, STRIPE_SECRET_KEY, JWT_SECRET.',
         impact:
-          'Anyone requesting this URL reads live secrets directly — a straight path to database and payment-processor compromise.',
+          'Anyone requesting this URL reads live secrets directly, a straight path to database and payment-processor compromise.',
         remediation: 'Remove the file from the web root and rotate every exposed credential immediately.',
       },
       {
@@ -121,7 +121,7 @@ const TARGETS: ScanTarget[] = [
         title: 'Session cookie missing HttpOnly + Secure',
         severity: 'high',
         tier: 'exploitable',
-        evidence: 'Set-Cookie: sid=...; Path=/ — no HttpOnly, Secure, or SameSite attributes.',
+        evidence: 'Set-Cookie: sid=...; Path=/, no HttpOnly, Secure, or SameSite attributes.',
         impact: 'Combined with the XSS sink above, the session cookie can be read by injected script and hijacked.',
         remediation: 'Set HttpOnly, Secure, and SameSite=Lax/Strict on all session cookies.',
       },
@@ -151,7 +151,7 @@ const TARGETS: ScanTarget[] = [
         title: 'Server + framework version disclosed',
         severity: 'info',
         tier: 'info',
-        evidence: 'Server: nginx/1.18.0 — X-Powered-By: Express; build banner exposes app v2.3.1.',
+        evidence: 'Server: nginx/1.18.0, X-Powered-By: Express; build banner exposes app v2.3.1.',
         impact: 'Lets an attacker fingerprint the stack and look up known CVEs for the exact version.',
         remediation: 'Suppress Server / X-Powered-By banners and version strings in responses.',
       },
@@ -162,7 +162,7 @@ const TARGETS: ScanTarget[] = [
     label: 'listio-drive',
     url: 'https://listio-drive.dawn-lab.dev',
     blurb: 'Production-style app, well configured',
-    posture: 'Hardened — only minor signals',
+    posture: 'Hardened, only minor signals',
     discovery: { pages: 8, assets: 11, paths: 18 },
     findings: [
       {
@@ -181,7 +181,7 @@ const TARGETS: ScanTarget[] = [
         title: 'Generic server banner present',
         severity: 'info',
         tier: 'info',
-        evidence: 'Server: cloudflare — no precise version leaked; app build hash not exposed.',
+        evidence: 'Server: cloudflare, no precise version leaked; app build hash not exposed.',
         impact: 'Minimal fingerprinting value. Listed for completeness.',
         remediation: 'No action required; banner is already generic.',
       },
@@ -191,7 +191,7 @@ const TARGETS: ScanTarget[] = [
         title: 'Session cookies correctly flagged',
         severity: 'info',
         tier: 'info',
-        evidence: 'Set-Cookie: sid=...; HttpOnly; Secure; SameSite=Lax — all protections present.',
+        evidence: 'Set-Cookie: sid=...; HttpOnly; Secure; SameSite=Lax, all protections present.',
         impact: 'No issue. Confirms good session-cookie hygiene.',
         remediation: 'No change needed.',
       },
@@ -293,10 +293,10 @@ function buildReport(meta: { url: string; profile: string }, findings: Finding[]
     )
     .join('\n')
 
-  return `# Project Dawn — Passive Assessment
+  return `# Project Dawn, Passive Assessment
 **Target:** ${meta.url}
 **Profile:** ${meta.profile} (passive only · no exploit payloads)
-**Risk score:** ${score}/100 — Grade ${grade.grade} (${grade.label})
+**Risk score:** ${score}/100, Grade ${grade.grade} (${grade.label})
 
 ## Findings by severity
 ${counts}
@@ -305,11 +305,11 @@ ${counts}
 ${top || '_No issues detected by the passive checks._'}
 
 > Findings are deterministic, evidence-based facts from response headers and
-> delivered markup. Passive GET only — no exploit payloads were sent.
+> delivered markup. Passive GET only, no exploit payloads were sent.
 `
 }
 
-/* Real passive checks over the proxy response — headers + delivered HTML only. */
+/* Real passive checks over the proxy response, headers + delivered HTML only. */
 function analyzeResponse(scan: ScanResponse): Finding[] {
   const findings: Finding[] = []
   const h = scan.headers || {}
@@ -405,7 +405,7 @@ function analyzeResponse(scan: ScanResponse): Finding[] {
       severity: 'high',
       tier: 'exploitable',
       evidence: 'Access-Control-Allow-Origin: * together with Allow-Credentials: true.',
-      impact: "Any website can read this site's authenticated responses — direct exposure of logged-in data.",
+      impact: "Any website can read this site's authenticated responses, direct exposure of logged-in data.",
       remediation: 'Echo a strict allow-list of origins instead of * when credentials are allowed.',
     })
   }
@@ -858,7 +858,7 @@ export function DawnScanner() {
             {logs.length === 0 && (
               <p className="dawn-empty">
                 {mode === 'demo'
-                  ? 'Pick a target, confirm authorization, then run the scan. These are pre-recorded sandbox results — no network requests.'
+                  ? 'Pick a target, confirm authorization, then run the scan. These are pre-recorded sandbox results, no network requests.'
                   : 'Type a URL, confirm authorization, then run. Dawn fetches it once, server-side, and analyzes the response headers and delivered markup.'}
               </p>
             )}
@@ -986,7 +986,7 @@ export function DawnScanner() {
             >
               <ShieldAlert size={15} />
               <span>
-                Generated Markdown report — {allFindings.length} finding{allFindings.length === 1 ? '' : 's'},
+                Generated Markdown report, {allFindings.length} finding{allFindings.length === 1 ? '' : 's'},
                 grade {riskGrade(finalScore).grade}
               </span>
               <ChevronDown size={16} className={showReport ? 'rot' : ''} />

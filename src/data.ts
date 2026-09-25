@@ -2,14 +2,12 @@ import type { LucideIcon } from 'lucide-react'
 import {
   Bot,
   BrainCircuit,
-  CarFront,
   DatabaseZap,
   FileSearch,
   LockKeyhole,
   MailCheck,
   MapPinned,
   ShieldCheck,
-  Sparkles,
   TrendingUp,
   Workflow,
 } from 'lucide-react'
@@ -73,23 +71,23 @@ export const proofStats = [
 export const capabilities: Capability[] = [
   {
     icon: Workflow,
-    label: 'Workflow Automation',
-    detail: 'Turns messy operational inputs into reviewable product flows.',
+    label: 'Automation',
+    detail: 'Turning emails, forms and spreadsheets into steps someone can check and approve.',
   },
   {
     icon: BrainCircuit,
-    label: 'AI Product UX',
-    detail: 'Structured output, confidence, fallback states, and human control.',
+    label: 'LLM features',
+    detail: 'Structured output with a confidence score, and a sensible fallback when the model is unsure.',
   },
   {
     icon: LockKeyhole,
-    label: 'Guardrails',
-    detail: 'Audit trails, role-aware access, privacy boundaries, and safe demos.',
+    label: 'Safety checks',
+    detail: 'Audit logs, permissions, and demos that never touch real data.',
   },
   {
     icon: DatabaseZap,
-    label: 'Full-Stack Systems',
-    detail: 'React, TypeScript, Node, databases, jobs, monitoring, and deploys.',
+    label: 'Full stack',
+    detail: 'React, TypeScript, Node, SQL, background jobs and deploys.',
   },
 ]
 
@@ -194,8 +192,8 @@ export const projects: PortfolioProject[] = [
     proofPoints: [
       'Deterministic, evidence-based findings the model only summarizes',
       'Long-running local agent with memory compression and a JSONL journal',
-      'Authorization-gated, passive-only — no exploit payloads',
-      'Try it live below — demo targets or a real URL you own',
+      'Authorization-gated, passive-only, no exploit payloads',
+      'Try it live below, demo targets or a real URL you own',
     ],
     links: [{ label: 'Try the scanner', href: '#scanner' }],
     screenshots: [],
@@ -287,29 +285,27 @@ export const projects: PortfolioProject[] = [
 ]
 
 export const recruiterBullets = [
-  'Junior AI / Automation / Full-Stack Developer focused on practical operations software.',
-  'Builds product flows around review, safety, auditability, and real user constraints.',
-  'Strong fit for internal tools, AI workflow automation, RAG assistants, and ops dashboards.',
-  'Avoids fake claims: public demos use synthetic data and clearly label target KPIs.',
+  'Two live products, Listio and Listio Drive, built and run end to end.',
+  'Comfortable across React, Node, SQL, payments, maps and background jobs.',
+  'Most at home on internal tools, automation and dashboards.',
+  'Public demos use made-up data, and target numbers are labelled as targets.',
 ]
 
 export const targetRoles = [
-  'Junior AI Automation Developer',
-  'Junior Full-Stack Developer with AI features',
+  'Junior full-stack developer',
+  'Automation developer',
   'Product Engineer',
   'Solutions / Automation Engineer',
   'Internal Tools Developer',
 ]
 
 export const stackItems = [
-  { icon: Sparkles, label: 'React + TypeScript' },
-  { icon: Bot, label: 'Local LLMs via Ollama' },
-  { icon: Bot, label: 'OpenAI-ready structured outputs' },
-  { icon: FileSearch, label: 'Supabase-ready RAG permissions' },
+  { icon: Workflow, label: 'React and TypeScript' },
+  { icon: DatabaseZap, label: 'Node.js and SQL' },
+  { icon: Bot, label: 'Local LLMs with Ollama' },
+  { icon: FileSearch, label: 'Structured LLM output' },
   { icon: ShieldCheck, label: 'Passive security scanning' },
-  { icon: TrendingUp, label: 'Momentum scoring gates' },
-  { icon: ShieldCheck, label: 'OWASP GenAI guardrails' },
-  { icon: MailCheck, label: 'Email-to-workflow automation' },
-  { icon: CarFront, label: 'Mobility / marketplace domain' },
-  { icon: MapPinned, label: 'Route and dispatch UX' },
+  { icon: TrendingUp, label: 'Market data APIs' },
+  { icon: MailCheck, label: 'Email parsing' },
+  { icon: MapPinned, label: 'Maps and routing' },
 ]

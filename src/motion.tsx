@@ -1,78 +1,39 @@
 import {
-  animate,
   motion,
-  useInView,
   useMotionValue,
   useReducedMotion,
-  useScroll,
   useSpring,
   type HTMLMotionProps,
 } from 'framer-motion'
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from 'react'
-
-/* Thin progress bar pinned to the top of the viewport, driven by scroll. */
-export function ScrollProgress() {
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 28, restDelta: 0.001 })
-
-  return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden="true" />
-}
+import { useRef, type CSSProperties, type ReactNode } from 'react'
 
 type RevealProps = {
   children: ReactNode
   className?: string
-  /** Stagger index — each step adds delayStep seconds. */
+  /** Kept for call sites that still pass a stagger index. */
   index?: number
   delayStep?: number
-  /** Travel distance in px before settling. */
   y?: number
   as?: 'div' | 'section' | 'article' | 'li' | 'span'
   style?: CSSProperties
-  /** Adds a spring hover-lift (framer controls transform, so CSS :hover can't). */
+  /** Small hover lift (framer owns the transform, so CSS :hover can't). */
   lift?: boolean
 }
 
-/* Fade + lift on first scroll into view. Honors reduced-motion. */
-export function Reveal({
-  children,
-  className,
-  index = 0,
-  delayStep = 0.07,
-  y = 26,
-  as = 'div',
-  style,
-  lift = false,
-}: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -12% 0px' })
+/*
+ * Content used to fade and blur in on scroll. It now renders straight away, so nothing
+ * is invisible while JavaScript catches up, and only the optional hover lift remains.
+ */
+export function Reveal({ children, className, as = 'div', style, lift = false }: RevealProps) {
   const reduce = useReducedMotion()
   const MotionTag = motion[as] as typeof motion.div
 
   return (
     <MotionTag
-      ref={ref}
       className={className}
       style={style}
-      initial={reduce ? false : { opacity: 0, y, filter: 'blur(6px)' }}
-      animate={
-        inView
-          ? { opacity: 1, y: 0, filter: 'blur(0px)' }
-          : reduce
-            ? undefined
-            : { opacity: 0, y, filter: 'blur(6px)' }
-      }
-      whileHover={lift && !reduce ? { y: -6 } : undefined}
-      transition={{
-        duration: 0.7,
-        delay: index * delayStep,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      whileHover={lift && !reduce ? { y: -3 } : undefined}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       {children}
     </MotionTag>
@@ -84,59 +45,18 @@ type CounterProps = {
   suffix?: string
   prefix?: string
   decimals?: number
-  duration?: number
   className?: string
 }
 
-/* Counts up from 0 to `to` once scrolled into view. */
-export function Counter({
-  to,
-  suffix = '',
-  prefix = '',
-  decimals = 0,
-  duration = 1.5,
-  className,
-}: CounterProps) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
-  const reduce = useReducedMotion()
-  const hasAnimatedRef = useRef(false)
-  const prevToRef = useRef(0)
-  const [display, setDisplay] = useState(0)
-
-  useEffect(() => {
-    if (!inView) {
-      if (hasAnimatedRef.current) {
-        prevToRef.current = to
-      }
-      return
-    }
-    if (reduce) {
-      prevToRef.current = to
-      hasAnimatedRef.current = true
-      return
-    }
-    const startVal = prevToRef.current
-    prevToRef.current = to
-    hasAnimatedRef.current = true
-
-    const controls = animate(startVal, to, {
-      duration,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (value) => setDisplay(value),
-    })
-    return () => controls.stop()
-  }, [inView, to, duration, reduce])
-
-  const displayValue = reduce ? to : display
-  const isNegative = displayValue < 0
-  const absDisplay = Math.abs(displayValue)
+/* Formatted number. Trading figures should not count up from zero. */
+export function Counter({ to, suffix = '', prefix = '', decimals = 0, className }: CounterProps) {
+  const isNegative = to < 0
 
   return (
-    <span ref={ref} className={className}>
+    <span className={className}>
       {isNegative ? '-' : ''}
       {prefix}
-      {absDisplay.toLocaleString('en-US', {
+      {Math.abs(to).toLocaleString('en-US', {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
       })}
@@ -145,11 +65,11 @@ export function Counter({
   )
 }
 
-/* Button/anchor that drifts toward the cursor and springs back. */
+/* Button/anchor that drifts slightly toward the cursor and springs back. */
 export function Magnetic({
   children,
   className,
-  strength = 0.32,
+  strength = 0.18,
   ...rest
 }: HTMLMotionProps<'a'> & { children: ReactNode; strength?: number }) {
   const ref = useRef<HTMLAnchorElement>(null)
@@ -178,57 +98,5 @@ export function Magnetic({
     >
       {children}
     </motion.a>
-  )
-}
-
-/* Rotating word that types in and deletes, cycling through a list. */
-export function TypingRotator({ words, className }: { words: string[]; className?: string }) {
-  const reduce = useReducedMotion()
-  const [index, setIndex] = useState(0)
-  const [text, setText] = useState(words[0] ?? '')
-  const [phase, setPhase] = useState<'typing' | 'pausing' | 'deleting'>('pausing')
-
-  useEffect(() => {
-    if (reduce) return
-    const current = words[index] ?? ''
-    let timeout: ReturnType<typeof setTimeout>
-
-    if (phase === 'typing') {
-      if (text.length < current.length) {
-        timeout = setTimeout(() => setText(current.slice(0, text.length + 1)), 60)
-      } else {
-        timeout = setTimeout(() => setPhase('pausing'), 1400)
-      }
-    } else if (phase === 'pausing') {
-      timeout = setTimeout(() => setPhase('deleting'), 1100)
-    } else {
-      if (text.length > 0) {
-        timeout = setTimeout(() => setText(current.slice(0, text.length - 1)), 32)
-      } else {
-        timeout = setTimeout(() => {
-          setIndex((value) => (value + 1) % words.length)
-          setPhase('typing')
-        }, 0)
-      }
-    }
-
-    return () => clearTimeout(timeout)
-  }, [text, phase, index, words, reduce])
-
-  // Kick off the first type cycle.
-  useEffect(() => {
-    if (reduce) return
-    const timeout = setTimeout(() => {
-      setText('')
-      setPhase('typing')
-    }, 0)
-    return () => clearTimeout(timeout)
-  }, [reduce])
-
-  return (
-    <span className={className}>
-      {text}
-      {!reduce && <span className="type-caret" aria-hidden="true" />}
-    </span>
   )
 }

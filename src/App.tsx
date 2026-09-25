@@ -10,9 +10,7 @@ import {
   MailCheck,
   ShieldCheck,
   ShoppingBag,
-  Sparkles,
   TrendingUp,
-  Workflow,
 } from 'lucide-react'
 import './App.css'
 import {
@@ -23,7 +21,7 @@ import {
   targetRoles,
   type BookingScenario,
 } from './data'
-import { Counter, Magnetic, Reveal, ScrollProgress, TypingRotator } from './motion'
+import { Magnetic, Reveal } from './motion'
 
 const PortraitOrbit = lazy(() =>
   import('./PortraitOrbit').then((module) => ({ default: module.PortraitOrbit })),
@@ -71,28 +69,28 @@ function NavProjects({ onOpenExperience }: { onOpenExperience: (id: ExperienceId
       </button>
       <div className={open ? 'projects-menu open' : 'projects-menu'}>
         <a href="#/prediction-lab" onClick={() => select('montecarlo')}>
-          <strong>Quant Research Machine</strong>
-          <span>Strategy vs market simulations</span>
+          <strong>Strategy simulator</strong>
+          <span>Strategy against the market</span>
         </a>
         <a href="#/dawn" onClick={() => select('dawn')}>
           <strong>Project Dawn</strong>
-          <span>Local-first AI security workspace</span>
+          <span>Passive website security check</span>
         </a>
         <a href="#/radar" onClick={() => select('stock')}>
-          <strong>Stocks + Crypto Radar</strong>
-          <span>Real market-data scanner</span>
+          <strong>Momentum radar</strong>
+          <span>Stocks and crypto on the move</span>
         </a>
         <a href="#/booking" onClick={() => select('booking')}>
-          <strong>Booking to Trip AI</strong>
-          <span>Email to structured trip draft</span>
+          <strong>Booking email parser</strong>
+          <span>Email to trip draft</span>
         </a>
         <a href="https://drive.listio.lv/" target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
           <strong>Listio Drive</strong>
-          <span>Ride-sharing operations proof</span>
+          <span>Ride sharing, live</span>
         </a>
         <a href="https://listio.lv/" target="_blank" rel="noreferrer" onClick={() => setOpen(false)}>
           <strong>Listio Marketplace</strong>
-          <span>Live marketplace proof</span>
+          <span>Classifieds, live</span>
         </a>
       </div>
     </div>
@@ -157,11 +155,11 @@ function DemoSection() {
   return (
     <section className="section demo-section" id="demo">
       <Reveal className="section-heading">
-        <p className="eyebrow">Interactive proof</p>
-        <h2>Booking Email -&gt; Trip AI sandbox</h2>
+        <p className="eyebrow">Demo</p>
+        <h2>Booking email to trip draft</h2>
         <p>
-          Synthetic demo only. It shows the behavior: structured extraction, confidence, review gates,
-          and an audit trail. No real passenger data, no backend keys, no silent create actions.
+          Made-up emails only. The parser pulls out the trip details, scores how sure it is about each
+          one, and nothing is created until a person approves it.
         </p>
       </Reveal>
       <div className="demo-grid">
@@ -273,43 +271,18 @@ function DemoSection() {
 }
 
 function AboutDepth() {
-  const cards = [
-    {
-      n: '01',
-      title: 'I build flows, not wrappers.',
-      body: 'AI is only useful when it lands inside a workflow with state, review, and clear next actions.',
-    },
-    {
-      n: '02',
-      title: 'I think in products.',
-      body: 'The UI, copy, data model, and failure states need to work together before a demo feels real.',
-    },
-    {
-      n: '03',
-      title: 'I care about control.',
-      body: 'Confidence scores, audit trails, permission boundaries, and human approval are not extras.',
-    },
-  ]
-
   return (
     <section className="section about-depth" id="about">
       <Reveal className="section-heading">
-        <p className="eyebrow">What I am</p>
-        <h2>A product-minded builder who uses AI to make operations faster and safer.</h2>
+        <p className="eyebrow">About</p>
+        <h2>Full-stack developer, mostly TypeScript.</h2>
         <p>
-          My edge is connecting workflow pain to actual interfaces: the review screen, the guardrail,
-          the status model, the admin control, and the small detail that makes a system trustworthy.
+          I built Listio, a Latvian classifieds marketplace, and Listio Drive, a ride-sharing app for
+          the Baltics. The projects on this page are smaller tools I made along the way, mostly for
+          trading research and for automating dull admin work. I use AI coding tools every day and
+          read what they write before it ships.
         </p>
       </Reveal>
-      <div className="identity-grid">
-        {cards.map((card, index) => (
-          <Reveal as="article" key={card.n} index={index} lift>
-            <span>{card.n}</span>
-            <h3>{card.title}</h3>
-            <p>{card.body}</p>
-          </Reveal>
-        ))}
-      </div>
     </section>
   )
 }
@@ -318,12 +291,12 @@ function RecruiterBrief() {
   return (
     <section className="section recruiter-section" id="recruiter">
       <Reveal className="section-heading">
-        <p className="eyebrow">Recruiter mode</p>
-        <h2>Short version: I build practical AI workflow products.</h2>
+        <p className="eyebrow">For recruiters</p>
+        <h2>The short version</h2>
       </Reveal>
       <div className="brief-grid">
         <Reveal as="article" index={0} lift>
-          <h3>Target roles</h3>
+          <h3>Roles I&apos;m looking for</h3>
           <ul>
             {targetRoles.map((role) => (
               <li key={role}>{role}</li>
@@ -331,7 +304,7 @@ function RecruiterBrief() {
           </ul>
         </Reveal>
         <Reveal as="article" index={1} lift>
-          <h3>What I can show</h3>
+          <h3>What I bring</h3>
           <ul>
             {recruiterBullets.map((bullet) => (
               <li key={bullet}>{bullet}</li>
@@ -339,7 +312,7 @@ function RecruiterBrief() {
           </ul>
         </Reveal>
         <Reveal as="article" index={2} lift>
-          <h3>Stack signals</h3>
+          <h3>Tools I use</h3>
           <div className="stack-grid">
             {stackItems.map((item) => {
               const Icon = item.icon
@@ -361,17 +334,17 @@ const experienceCards = [
   {
     id: 'stock' as const,
     icon: TrendingUp,
-    title: 'Stock Momentum Radar',
-    label: 'Real market-data scanner',
-    body: 'Real US-listed movers, chart stats, linked news, TradingView verification links, and strict paper-trading attention gates.',
-    action: 'Explore Trades',
+    title: 'Momentum radar',
+    label: 'Live market data',
+    body: 'US stocks and crypto that are moving right now, with chart stats, news links and strict entry rules for a paper-trading bot.',
+    action: 'Open radar',
   },
   {
     id: 'montecarlo' as const,
     icon: GitBranch,
-    title: 'Quant Research Machine',
-    label: 'Outperformance simulator',
-    body: 'Compares the strategy with the market, measures cost drag, and tests whether alpha survives 50 market seeds and leakage-aware validation.',
+    title: 'Strategy simulator',
+    label: 'Quant research',
+    body: 'Runs a trading strategy against the market over 50 simulated markets, costs included, to see whether the edge survives.',
     action: 'Open simulator',
   },
   {
@@ -379,15 +352,15 @@ const experienceCards = [
     icon: ShieldCheck,
     title: 'Project Dawn',
     label: 'Security scanner',
-    body: 'Consent-gated passive web scanner with evidence, severity ranking, and a live report stream.',
+    body: 'Checks a site you own for missing headers, exposed files and risky scripts. It never sends attack traffic.',
     action: 'Open scanner',
   },
   {
     id: 'booking' as const,
     icon: MailCheck,
-    title: 'Booking Email AI',
-    label: 'Ops automation demo',
-    body: 'Turns messy booking emails into reviewable trip drafts with confidence scores and audit history.',
+    title: 'Booking email parser',
+    label: 'Automation demo',
+    body: 'Reads a messy booking email, fills in a trip draft and flags the fields it is unsure about.',
     action: 'Open workflow',
   },
   {
@@ -395,7 +368,7 @@ const experienceCards = [
     icon: CarFront,
     title: 'Listio Drive',
     label: 'Live mobility product',
-    body: 'Route search, reservations, rider/driver surfaces, and launch-readiness work for Baltic ride sharing.',
+    body: 'Ride sharing in the Baltics: route search, bookings, and separate rider and driver views.',
     action: 'Visit site',
     href: 'https://drive.listio.lv/',
   },
@@ -404,7 +377,7 @@ const experienceCards = [
     icon: ShoppingBag,
     title: 'Listio Marketplace',
     label: 'Live marketplace',
-    body: 'Classifieds, listings, categories, subscriptions, map browsing, and marketplace operations proof.',
+    body: 'Latvian classifieds with categories, subscriptions and a map view.',
     action: 'Visit site',
     href: 'https://listio.lv/',
   },
@@ -414,12 +387,9 @@ function ExperienceLauncher({ onOpenExperience }: { onOpenExperience: (id: Exper
   return (
     <section className="section launcher-section" id="projects">
       <Reveal className="section-heading compact-heading">
-        <p className="eyebrow">Work launcher</p>
-        <h2>Pick a system. The page opens one focused workspace.</h2>
-        <p>
-          The projects are no longer stacked as huge sections. Hover a tile for context, then open the
-          tool or live product you want to inspect.
-        </p>
+        <p className="eyebrow">Projects</p>
+        <h2>Open one</h2>
+        <p>The first four run on this page. The last two are live products and open in a new tab.</p>
       </Reveal>
       <div className="tool-launcher-grid">
         {experienceCards.map((card, index) => {
@@ -493,19 +463,19 @@ function WorkspacePage({
       body: '',
     },
     dawn: {
-      eyebrow: 'Fullscreen workspace',
+      eyebrow: '',
       title: 'Project Dawn scanner',
-      body: 'Passive security assessment demo with consent gate, evidence, and generated report.',
+      body: 'A passive security check for sites you own. It reads what the site already serves and writes up what it finds.',
     },
     booking: {
-      eyebrow: 'Fullscreen workspace',
-      title: 'Booking Email AI sandbox',
-      body: 'Synthetic ops workflow showing extraction, confidence, review gates, and audit trail.',
+      eyebrow: '',
+      title: 'Booking email parser',
+      body: 'Sample emails only. The parser fills in a trip draft and flags anything it is unsure of.',
     },
     montecarlo: {
-      eyebrow: 'Fullscreen workspace',
-      title: 'Quant Research Machine',
-      body: 'Simulation-first research: compare the strategy with the market, test robustness across many seeds, and see exactly what blocks a credible outperformance claim.',
+      eyebrow: '',
+      title: 'Strategy simulator',
+      body: 'Runs the strategy against the market across many simulated markets and shows what stops it from counting as a real edge.',
     },
   }[activeExperience]
 
@@ -515,7 +485,7 @@ function WorkspacePage({
         <div className="workspace-top">
           <button type="button" className="workspace-back" onClick={onBack}>
             <ArrowRight size={16} />
-            Back to portfolio
+            Back
           </button>
           <div>
             {meta.eyebrow && <p className="eyebrow">{meta.eyebrow}</p>}
@@ -557,13 +527,6 @@ function App() {
 
   return (
     <main>
-      <ScrollProgress />
-      <div className="bg-aurora" aria-hidden="true">
-        <span className="orb orb-1" />
-        <span className="orb orb-2" />
-        <span className="orb orb-3" />
-        <div className="bg-grid" />
-      </div>
 
       <header className="site-nav">
         <a className="brand" href="#top" onClick={goHome}>
@@ -585,62 +548,28 @@ function App() {
         <>
       <section className="hero" id="top">
         <div className="hero-copy">
-          <p className="eyebrow">
-            <span className="status-dot" /> Junior AI ·{' '}
-            <TypingRotator
-              className="rotator"
-              words={['Automation', 'Full-Stack', 'Security-aware', 'Product']}
-            />{' '}
-            Developer
-          </p>
-          <h1>
-            Hi, I&apos;m Roberts. I build <span className="grad-text">AI-powered</span> workflow
-            products.
-          </h1>
+          <p className="eyebrow">Roberts Hartmanis, Riga</p>
+          <h1>Hi, I&apos;m Roberts. This is where I keep the tools I&apos;ve built.</h1>
           <p className="hero-lede">
-            I focus on useful systems: internal tools, AI-assisted operations, marketplace flows, and
-            ride-sharing automation. I care about clean UX, reviewable AI decisions, and products that
-            feel real instead of just being model wrappers.
+            A stock and crypto scanner with a paper-trading bot, a strategy simulator, a passive
+            website security scanner and a booking email parser. They all run here in the browser.
+            My live products, Listio and Listio Drive, are linked further down.
           </p>
           <div className="hero-actions">
             <Magnetic className="primary-button" href="#/radar" onClick={() => openExperience('stock')}>
-              Explore Trades
+              Open the radar
               <ArrowRight size={17} />
             </Magnetic>
             <a className="secondary-button" href="#projects">
-              Choose a system
-              <Workflow size={17} />
+              All projects
             </a>
-          </div>
-          <div className="hero-stats" aria-label="Portfolio summary">
-            <div>
-              <strong>
-                <Counter to={6} />
-              </strong>
-              <span>portfolio proof points</span>
-            </div>
-            <div>
-              <strong>
-                <Counter to={4} />
-              </strong>
-              <span>tryable AI demos</span>
-            </div>
-            <div>
-              <strong>
-                <Counter to={0} />
-              </strong>
-              <span>silent create actions</span>
-            </div>
           </div>
         </div>
         <div className="portrait-stage">
           <Suspense fallback={<div className="portrait-card portrait-loading">Loading interactive card</div>}>
             <PortraitOrbit />
           </Suspense>
-          <div className="portrait-note">
-            <Sparkles size={16} />
-            drag the card to spin it from every side
-          </div>
+          <div className="portrait-note">Drag the photo to turn it</div>
         </div>
         <a className="scroll-cue" href="#about" aria-label="Scroll to content">
           <span />
@@ -667,7 +596,7 @@ function App() {
       <footer className="site-footer">
         <div>
           <strong>Roberts</strong>
-          <p>AI automation, internal tools, and product-minded full-stack work.</p>
+          <p>Full-stack developer in Riga.</p>
         </div>
         <div className="footer-links">
           <a href="mailto:roberts@lords.id.lv">

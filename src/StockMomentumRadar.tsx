@@ -461,9 +461,9 @@ type PerfMetric = 'equity' | 'pnl'
 // One Lightweight Charts canvas that toggles between two related-but-distinct
 // performance curves (auto-scaling price/time axes, crosshair, animated
 // last-price marker, draggable/zoomable look-back windows):
-//   • ACCOUNT VALUE — equity (cash + open positions) sampled every tick; moves
+//   • ACCOUNT VALUE, equity (cash + open positions) sampled every tick; moves
 //     on unrealized swings too.
-//   • REALIZED P/L — cumulative profit from CLOSED trades only; steps only when
+//   • REALIZED P/L, cumulative profit from CLOSED trades only; steps only when
 //     a trade books an exit.
 function PaperBotPerformanceChart({
   series,
@@ -494,7 +494,7 @@ function PaperBotPerformanceChart({
   const liveEquity = account?.equity ?? (hasEquity ? eqLast : null)
   const liveCash = account?.cash ?? (hasEquity ? series[series.length - 1].cash : null)
   const equityNow = liveEquity ?? (hasEquity ? eqLast : null)
-  // True performance is the net realized P&L after modeled costs — NOT the
+  // True performance is the net realized P&L after modeled costs, NOT the
   // rolling chart window.
   const hasPnlNum = typeof netRealizedPl === 'number' && Number.isFinite(netRealizedPl)
   const realizedPnl = hasPnlNum ? (netRealizedPl as number) : eqLast - eqFirst
@@ -569,7 +569,7 @@ function PaperBotPerformanceChart({
         vertLine: { width: 1, style: LineStyle.Dashed, labelVisible: true },
         horzLine: { width: 1, style: LineStyle.Dashed, labelVisible: true },
       },
-      // Pan with drag/wheel, zoom with wheel/pinch — keep the price axis locked
+      // Pan with drag/wheel, zoom with wheel/pinch, keep the price axis locked
       // so the curve can't be dragged off vertically.
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
       handleScale: { mouseWheel: true, pinch: true, axisPressedMouseMove: { time: true, price: false } },
@@ -586,7 +586,7 @@ function PaperBotPerformanceChart({
     chartRef.current = chart
     seriesRef.current = areaSeries
 
-    // Only re-apply when the box actually changed size — guards against a
+    // Only re-apply when the box actually changed size, guards against a
     // resize→relayout→resize feedback loop.
     let lastW = el.clientWidth
     let lastH = el.clientHeight
@@ -738,8 +738,8 @@ function PaperBotPerformanceChart({
         {!hasActive && (
           <p className="paper-bot-empty paper-bot-equity-empty">
             {metric === 'equity'
-              ? 'Collecting account-value samples — the curve fills in as the bot runs and trades.'
-              : 'No closed trades yet — the realized P/L curve appears once the bot books its first exit.'}
+              ? 'Collecting account-value samples, the curve fills in as the bot runs and trades.'
+              : 'No closed trades yet, the realized P/L curve appears once the bot books its first exit.'}
           </p>
         )}
       </div>
@@ -886,12 +886,12 @@ function classifySetup(candidate: MomentumCandidate) {
   const extension = candidate.vwapExtensionPct ?? (candidate.vwap > 0 ? ((candidate.price - candidate.vwap) / candidate.vwap) * 100 : null)
   const micro = candidate.assetClass === 'stock' ? candidate.microPullback : undefined
   // Mean-reversion: the opposite of momentum. Stretched BELOW VWAP, the controlled
-  // buy is the reclaim back toward the mean — never a breakout chase.
+  // buy is the reclaim back toward the mean, never a breakout chase.
   if (candidate.strategy === 'reversion') {
     if (candidate.signal.action === 'BUY') {
       return {
         tone: 'reclaim',
-        label: 'VWAP reclaim — controlled buy',
+        label: 'VWAP reclaim, controlled buy',
         detail: `Stretched below VWAP and turning up. Buy the reclaim through ${formatPlanValue(
           candidate.signal.entryTrigger,
         )} toward VWAP ${formatPlanValue(candidate.vwap)}; hard stop ${formatPlanValue(candidate.signal.stopLoss)}.`,
@@ -902,7 +902,7 @@ function classifySetup(candidate: MomentumCandidate) {
       label: 'VWAP reclaim watch (mean reversion)',
       detail: `Stretched below VWAP ${formatPlanValue(
         candidate.vwap,
-      )}. Wait for a confirmed turn back up — buy the reclaim, don't catch the knife.`,
+      )}. Wait for a confirmed turn back up, buy the reclaim, don't catch the knife.`,
     }
   }
   if (candidate.signal.action === 'BUY') {
@@ -1148,7 +1148,7 @@ function isStrictTraderCandidate(candidate: MomentumCandidate) {
     hasActionableStatus &&
     hasActionableSignal &&
     candidate.dataQuality === 'VERIFIED' &&
-    // Reversion setups are below VWAP by design — that IS the setup — so they are
+    // Reversion setups are below VWAP by design, that IS the setup, so they are
     // tradable signals rather than "context only" rows.
     (candidate.aboveVwap || candidate.strategy === 'reversion') &&
     candidate.price > 0 &&
@@ -1156,7 +1156,7 @@ function isStrictTraderCandidate(candidate: MomentumCandidate) {
   )
 }
 
-// A genuinely interesting mover — used only to pick the "closest to a signal"
+// A genuinely interesting mover, used only to pick the "closest to a signal"
 // NO-TRADE context rows, so flat majors (e.g. a stablecoin sitting at 0%) never
 // crowd out the real action. This does NOT relax the strict trade gate above;
 // these rows are shown as context only and are never tradable signals.
@@ -1168,7 +1168,7 @@ function isRealMover(candidate: MomentumCandidate) {
 }
 
 // The confirmation ladder shown as a stepper. `failed` shares the last slot with
-// `confirmed` but renders red — the break got that far, then broke down.
+// `confirmed` but renders red, the break got that far, then broke down.
 const PHASE_STEPS: { key: SignalPhase; label: string }[] = [
   { key: 'armed', label: 'Armed' },
   { key: 'triggered', label: 'Triggered' },
@@ -1222,7 +1222,7 @@ function SignalPhaseBanner({ phase }: { phase: SignalStability }) {
 // ---- manual position tracking ("I'm in") --------------------------------
 // A trade the user tells the radar they actually entered. Stored in
 // localStorage and used to turn a confirmed signal into live "what do I do
-// now" guidance. This is a personal journal/coach — it places no real orders
+// now" guidance. This is a personal journal/coach, it places no real orders
 // (that is the separate paper bot) and is independent of the signal engine.
 const POSITIONS_STORAGE_KEY = 'radar.trackedPositions.v1'
 const RADAR_THEME_STORAGE_KEY = 'radar.theme.v1'
@@ -1258,7 +1258,7 @@ function positionGuidance(position: TrackedPosition, price: number): PositionGui
   if (stop !== null && price <= stop) {
     return {
       tone: 'exit',
-      headline: 'Exit now — stop hit',
+      headline: 'Exit now, stop hit',
       detail: `Price ${formatMoney(price)} is at/under your stop ${formatMoney(stop)}. Close it; the setup is invalidated.`,
       plPct,
     }
@@ -1266,7 +1266,7 @@ function positionGuidance(position: TrackedPosition, price: number): PositionGui
   if (target2 !== null && price >= target2) {
     return {
       tone: 'profit',
-      headline: 'Take profit — final target hit',
+      headline: 'Take profit, final target hit',
       detail: `Hit your final target ${formatMoney(target2)}. Bank it, or trail a tight stop if you let a runner go.`,
       plPct,
     }
@@ -1282,22 +1282,22 @@ function positionGuidance(position: TrackedPosition, price: number): PositionGui
   if (price >= entryPrice) {
     return {
       tone: 'profit',
-      headline: 'Hold — in profit',
+      headline: 'Hold, in profit',
       detail: `Green from ${formatMoney(entryPrice)}. Let it work toward ${target1 !== null ? formatMoney(target1) : 'target 1'}; stop stays at ${stop !== null ? formatMoney(stop) : 'your stop'}.`,
       plPct,
     }
   }
   return {
     tone: 'hold',
-    headline: 'Hold — give it room',
-    detail: `Under your ${formatMoney(entryPrice)} entry but still above the stop${stop !== null ? ` ${formatMoney(stop)}` : ''}. Thesis holds until the stop — don't panic-sell the noise.`,
+    headline: 'Hold, give it room',
+    detail: `Under your ${formatMoney(entryPrice)} entry but still above the stop${stop !== null ? ` ${formatMoney(stop)}` : ''}. Thesis holds until the stop, don't panic-sell the noise.`,
     plPct,
   }
 }
 
 // A position the user is holding, rendered as a full row PINNED to the top of
 // the trade list. It is driven by the tracked position (not the shortlist), so
-// it never disappears when the ticker drops out of the strict gate — the bug
+// it never disappears when the ticker drops out of the strict gate, the bug
 // where "it should have stayed at the top because I bought it". Live price comes
 // from the latest scan when available, otherwise it falls back to the entry and
 // flags "off radar" so guidance is still shown.
@@ -1393,14 +1393,14 @@ function HeldPositionRow({
         </span>
         <span>
           <small>Stop</small>
-          <b>{position.stop !== null ? formatMoney(position.stop) : '—'}</b>
+          <b>{position.stop !== null ? formatMoney(position.stop) : '-'}</b>
         </span>
         <span>
           <small>Targets</small>
           <b>
-            {position.target1 !== null ? formatMoney(position.target1) : '—'}
+            {position.target1 !== null ? formatMoney(position.target1) : '-'}
             {' / '}
-            {position.target2 !== null ? formatMoney(position.target2) : '—'}
+            {position.target2 !== null ? formatMoney(position.target2) : '-'}
           </b>
         </span>
       </div>
@@ -1488,16 +1488,16 @@ function CandidateRow({
   const planDo =
     candidate.signal.action === 'BUY'
       ? candidate.strategy === 'reversion'
-        ? `DO: buy only through the reclaim ${formatPlanValue(candidate.signal.entryTrigger)} toward VWAP — stop ${formatPlanValue(candidate.signal.stopLoss)}.`
-        : `DO: buy only above ${formatPlanValue(candidate.signal.entryTrigger)} while it holds VWAP — stop ${formatPlanValue(candidate.signal.stopLoss)}.`
+        ? `DO: buy only through the reclaim ${formatPlanValue(candidate.signal.entryTrigger)} toward VWAP, stop ${formatPlanValue(candidate.signal.stopLoss)}.`
+        : `DO: buy only above ${formatPlanValue(candidate.signal.entryTrigger)} while it holds VWAP, stop ${formatPlanValue(candidate.signal.stopLoss)}.`
       : candidate.signal.action === 'WAIT'
         ? candidate.strategy === 'reversion'
-          ? `DO: wait — act only if it reclaims ${formatPlanValue(candidate.signal.entryTrigger)} with turning tape.`
-          : `DO: wait — act only if it breaks ${formatPlanValue(candidate.signal.entryTrigger)} with VWAP support.`
-        : 'DO: stay out — no trade here.'
+          ? `DO: wait, act only if it reclaims ${formatPlanValue(candidate.signal.entryTrigger)} with turning tape.`
+          : `DO: wait, act only if it breaks ${formatPlanValue(candidate.signal.entryTrigger)} with VWAP support.`
+        : 'DO: stay out, no trade here.'
   const planDont =
     candidate.signal.action === 'AVOID'
-      ? `DON'T: enter — ${candidate.blockers[0] ?? 'setup or data gate failed'}.`
+      ? `DON'T: enter, ${candidate.blockers[0] ?? 'setup or data gate failed'}.`
       : candidate.blockers.length > 0
         ? `DON'T: enter while ${candidate.blockers[0]}.`
         : "DON'T: chase below VWAP or once it has run past the targets."
@@ -1728,7 +1728,7 @@ type JournalDay = {
 }
 
 // Group the bot's trade history into day buckets (newest first) with realized
-// P/L and win/loss tallies — the data behind the trade-journal calendar.
+// P/L and win/loss tallies, the data behind the trade-journal calendar.
 function groupTradesByDay(history: BotHistoryEntry[]): JournalDay[] {
   const order: string[] = []
   const byDay = new Map<string, JournalDay>()
@@ -2095,7 +2095,7 @@ function PaperBotPanel({
               </span>
               <span>
                 Tick
-                <b>{running ? lastTick : '—'}</b>
+                <b>{running ? lastTick : '-'}</b>
               </span>
               <span>
                 Floor
@@ -2107,7 +2107,7 @@ function PaperBotPanel({
               </span>
               <span>
                 Risk Level
-                <b>{bot?.riskLabel ?? '—'}</b>
+                <b>{bot?.riskLabel ?? '-'}</b>
               </span>
               <span>
                 Crypto Venue
@@ -2136,7 +2136,7 @@ function PaperBotPanel({
           <Reveal delayStep={0.05} index={3}>
             <p className="paper-bot-note">
               {mode === 'safe'
-                ? 'Safe: auto-trades only a curated list of liquid majors on the strictest gate (score 90+, fresh quote, tight spread) — fewer, cleaner entries.'
+                ? 'Safe: auto-trades only a curated list of liquid majors on the strictest gate (score 90+, fresh quote, tight spread), fewer, cleaner entries.'
                 : mode === 'active'
                   ? `Active: auto-trades the ${cryptoVenue === 'binance' ? 'Binance spot crypto universe' : 'Alpaca-tradable universe'} on a confirmed, risk-sized gate (momentum score 90+, reversion ${reversionMinScore}+, $50M+ crypto, fresh quote, volume pulse).`
                   : 'Turbo: an optimized paper-scalp mode with verified data, $40M+ crypto liquidity, green-trend pulse, two-tick confirmation, adaptive trailing, cash-aware sizing, and 35m time exits. More wins AND losses; not a serious strategy.'}{' '}
@@ -2166,7 +2166,7 @@ function PaperBotPanel({
                 <span>{paperTrading ? 'cash-aware sizing' : 'hard live cap'}</span>
                 <span>{paperTrading ? 'no paper daily caps' : 'live risk guard'}</span>
                 <span>{cryptoVenue === 'binance' ? 'Binance testnet crypto' : 'Alpaca tradable'}</span>
-                <span>risk: {bot?.riskLabel ?? '—'}</span>
+                <span>risk: {bot?.riskLabel ?? '-'}</span>
               </div>
             </details>
           </Reveal>
@@ -2291,7 +2291,7 @@ function PaperBotPanel({
                     </strong>
                     <span>
                       {macroBlackoutActive
-                        ? 'Blackout active — new entries paused through the print'
+                        ? 'Blackout active, new entries paused through the print'
                         : 'New entries pause briefly around these prints; exits keep running'}
                     </span>
                   </div>
@@ -2471,7 +2471,7 @@ function PaperBotPanel({
               </span>
             </div>
             {journal.length === 0 ? (
-              <span className="paper-bot-empty">No trades yet — start the bot (try Turbo to see lots quickly).</span>
+              <span className="paper-bot-empty">No trades yet, start the bot (try Turbo to see lots quickly).</span>
             ) : (
               <>
               {journal.slice(0, JOURNAL_MAX_DAYS).map((day) => (
@@ -2607,7 +2607,7 @@ export function StockMomentumRadar() {
     try {
       window.localStorage.setItem(RADAR_THEME_STORAGE_KEY, theme)
     } catch {
-      // storage can be unavailable (private mode) — the selected theme still works for the session
+      // storage can be unavailable (private mode), the selected theme still works for the session
     }
   }, [theme])
 
@@ -2615,7 +2615,7 @@ export function StockMomentumRadar() {
     try {
       window.localStorage.setItem(POSITIONS_STORAGE_KEY, JSON.stringify(positions))
     } catch {
-      // storage can be unavailable (private mode) — guidance still works for the session
+      // storage can be unavailable (private mode), guidance still works for the session
     }
   }, [positions])
 
@@ -2950,17 +2950,17 @@ export function StockMomentumRadar() {
   const trackedPositions = useMemo(() => Object.values(positions), [positions])
 
   // The context rows under the strict list: movers that did NOT clear the strict
-  // gate, shown as NO TRADE — never actionable. Honors the asset filter so a
+  // gate, shown as NO TRADE, never actionable. Honors the asset filter so a
   // Stocks-only or Crypto-only view never shows the other class as context.
   //
   // Two modes:
-  //   • near-miss — genuine 5%+ movers in the selected band, ranked by how close
+  //   • near-miss: genuine 5%+ movers in the selected band, ranked by how close
   //     they are to a signal (setup score).
-  //   • movers    — fallback when nothing tradable-grade is in the selected band.
+  //   • movers: fallback when nothing tradable-grade is in the selected band.
   //     Rather than an empty screen, surface the biggest % movers ranked by the
   //     size of today's move so you always see what's running hardest and how
   //     close it is. The 5% bar is relaxed (small-caps often move less) and, if
-  //     the selected band is itself empty, we broaden to every cap — cap data is
+  //     the selected band is itself empty, we broaden to every cap, cap data is
   //     frequently missing on exactly the low-float names a Small filter wants,
   //     so respecting the band literally would just show nothing.
   const nearMissCandidates = useMemo(() => {
@@ -3114,7 +3114,7 @@ export function StockMomentumRadar() {
                 <div className="held-head">
                   <Wallet size={15} />
                   <strong>Holding · {trackedPositions.length}</strong>
-                  <small>Pinned while you're in — live guidance follows the price. The radar places no real orders.</small>
+                  <small>Pinned while you're in, live guidance follows the price. The radar places no real orders.</small>
                 </div>
                 {trackedPositions.map((position) => (
                   <HeldPositionRow
@@ -3314,7 +3314,7 @@ export function StockMomentumRadar() {
               <span className="legend-arrow">→</span>
               <span className="legend-step phase-confirmed">Confirmed = buy</span>
               <span className="legend-note">
-                A break that fails fast is flagged <b className="phase-failed">Failed</b>, never a buy — no acting on one tick.
+                A break that fails fast is flagged <b className="phase-failed">Failed</b>, never a buy, no acting on one tick.
               </span>
             </div>
           </Reveal>
@@ -3343,7 +3343,7 @@ export function StockMomentumRadar() {
                     Nothing is holding VWAP near its high with verified data and a clean stop/target yet.
                     {nearMissCandidates.rows.length > 0
                       ? nearMissCandidates.fallback
-                        ? " Today's biggest movers are shown below as NO-TRADE context — closest to tradable first."
+                        ? " Today's biggest movers are shown below as NO-TRADE context, closest to tradable first."
                         : ' The closest movers are shown below as NO-TRADE context.'
                       : ''}
                   </span>
@@ -3364,9 +3364,9 @@ export function StockMomentumRadar() {
                   <small>
                     {nearMissCandidates.fallback
                       ? nearMissCandidates.broadened
-                        ? `No ${filteredAssetNoun} movers near a signal right now, so these are today's biggest % movers across all caps, ranked by how hard they're running. Context only — NOT a trade signal; each row shows its cap and the gate it still has to clear.`
-                        : "Today's strongest % movers that haven't cleared the strict gate yet, ranked by how hard they're running. Context only — NOT a trade signal; each row shows the gate it still has to clear."
-                      : 'Context only — these fail the strict gate (below VWAP, off the high, unverified, or market closed). NOT a trade signal. Learn the setups; don’t act on them.'}
+                        ? `No ${filteredAssetNoun} movers near a signal right now, so these are today's biggest % movers across all caps, ranked by how hard they're running. Context only, NOT a trade signal; each row shows its cap and the gate it still has to clear.`
+                        : "Today's strongest % movers that haven't cleared the strict gate yet, ranked by how hard they're running. Context only, NOT a trade signal; each row shows the gate it still has to clear."
+                      : 'Context only, these fail the strict gate (below VWAP, off the high, unverified, or market closed). NOT a trade signal. Learn the setups; don’t act on them.'}
                   </small>
                 </div>
                 {nearMissCandidates.rows.map((candidate) => (

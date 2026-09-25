@@ -1,6 +1,6 @@
 // Signal stabilization layer.
 //
-// The momentum engine (momentumCore.ts) scores every candidate *statelessly* —
+// The momentum engine (momentumCore.ts) scores every candidate *statelessly*, 
 // it re-decides CHECK NOW vs WATCH from scratch on every 60s scan and every 5s
 // live refresh. That makes the raw signal jump to "BUY NOW" the instant a price
 // tick crosses the strict gate, then snap back if the very next tick fails. For
@@ -9,7 +9,7 @@
 //
 // This module adds a small, time-aware state machine *on top of* the raw score,
 // applied ONLY at the radar's HTTP boundary (see vite.config.ts). It does not
-// touch scoreCandidate, the snapshot builder, or the paper bot — the bot keeps
+// touch scoreCandidate, the snapshot builder, or the paper bot, the bot keeps
 // reacting to the raw, instantaneous signal so it stays stricter and fully
 // independent of this display smoothing.
 //
@@ -27,7 +27,7 @@ import { MOMENTUM_RULES, type MomentumCandidate, type SignalEvent, type SignalPh
 // Live refresh cadence is ~5s and the full scan is ~60s. The model is built so a
 // breakout the user can actually act on: stocks confirm only after the same
 // multi-observation, 20-second dwell used by the default execution mode, then STAY
-// confirmed (sticky) until the trade is genuinely invalidated — and never flip
+// confirmed (sticky) until the trade is genuinely invalidated, and never flip
 // to FAILED on a single noisy tick.
 const CONFIRM_HOLDS = 2 // crypto breakout evaluations needed to confirm
 const CONFIRM_DWELL_MS = 4_000 // crypto minimum wall-clock hold
@@ -42,7 +42,7 @@ const STOP_TOLERANCE = 0.998 // hard invalidation needs a real stop loss break, 
 // While still armed, re-anchor the locked trigger to the live breakout level once it
 // has risen materially (>0.75%) above what we first locked. The raw engine anchors
 // entryTrigger to the high of day, so after a big run the true trigger sits well
-// above a level locked before the spike — but stop/targets are NOT frozen, so a
+// above a level locked before the spike, but stop/targets are NOT frozen, so a
 // stale-low trigger makes the card disagree with its own stop/targets. The deadband
 // keeps small per-scan creep from moving the goalpost (the reason we froze it).
 const TRIGGER_REANCHOR_RATIO = 1.0075
@@ -201,11 +201,11 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
   // Lock the trigger to the level present when the setup was first armed (or last
   // re-armed). The raw engine recomputes entryTrigger = max(price, high) * buffer
   // every 60s scan, so on a live move it ratchets the breakout line up just above
-  // price every minute — making the "Wait > $X" goalpost run away from the user.
+  // price every minute, making the "Wait > $X" goalpost run away from the user.
   // Freezing it here keeps a single, actionable level until a real reset.
   if (rec.triggerLevel === null) rec.triggerLevel = liveTrigger
   // Keep the locked level honest while we are still waiting (armed). After a real
-  // run the high — and thus the raw trigger — can sit well above the level we first
+  // run the high, and thus the raw trigger, can sit well above the level we first
   // locked; leaving it stale shows a "BUY ABOVE" below current price whose value
   // disagrees with the live stop/targets. Re-anchor only on a material rise, and
   // never once a break is being tagged (triggered/confirming/confirmed) so the
@@ -232,7 +232,7 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
   const dwellMs = requiredDwellMs(candidate)
 
   // An active cooldown after a failed break pins the phase to `failed`, even if
-  // price momentarily re-qualifies — a fake break must not instantly re-trigger.
+  // price momentarily re-qualifies, a fake break must not instantly re-trigger.
   if (rec.cooldownUntil && now < rec.cooldownUntil) {
     transition(rec, 'failed', now, price, 'cooling down after a failed break')
     return rec
@@ -241,7 +241,7 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
   switch (rec.phase) {
     case 'armed': {
       if (breakout) {
-        transition(rec, 'triggered', now, price, 'trigger tagged — confirming the break holds')
+        transition(rec, 'triggered', now, price, 'trigger tagged, confirming the break holds')
         rec.triggeredAt = now
         rec.holds = 1
         rec.failStreak = 0
@@ -250,10 +250,10 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
     }
     case 'triggered':
     case 'confirming': {
-      // Losing the hard stop before confirming is an immediate, structural fail —
+      // Losing the hard stop before confirming is an immediate, structural fail, 
       // the break is clearly dead, no need to wait it out.
       if (hardInvalidated) {
-        transition(rec, 'failed', now, price, 'broke the stop before confirming — fake break')
+        transition(rec, 'failed', now, price, 'broke the stop before confirming, fake break')
         rec.failedAt = now
         rec.cooldownUntil = now + FAILED_COOLDOWN_MS
         rec.holds = 0
@@ -265,7 +265,7 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
         rec.holds += 1
         const heldLongEnough = now - rec.triggeredAt >= dwellMs
         if (rec.holds >= holdsNeeded && heldLongEnough) {
-          transition(rec, 'confirmed', now, price, 'breakout held with VWAP support — confirmed')
+          transition(rec, 'confirmed', now, price, 'breakout held with VWAP support, confirmed')
           rec.confirmedAt = now
           rec.demoteStreak = 0
         } else {
@@ -273,19 +273,19 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
         }
       } else {
         // A single soft miss (one wick under the trigger, one flickered score) is
-        // NOT a failure — decay the hold count and keep waiting for it to reclaim.
+        // NOT a failure, decay the hold count and keep waiting for it to reclaim.
         // Only a *streak* of misses means the break genuinely didn't hold. This is
         // the fix for "it said confirming, I went to buy, and it flipped to FAILED".
         rec.failStreak += 1
         rec.holds = Math.max(0, rec.holds - 1)
         if (rec.failStreak >= CONFIRM_FAIL_STREAK) {
-          transition(rec, 'failed', now, price, 'pulled back under the trigger — the break did not hold')
+          transition(rec, 'failed', now, price, 'pulled back under the trigger, the break did not hold')
           rec.failedAt = now
           rec.cooldownUntil = now + FAILED_COOLDOWN_MS
           rec.holds = 0
           rec.failStreak = 0
         } else {
-          transition(rec, 'confirming', now, price, 'dipped under the trigger — waiting for it to reclaim')
+          transition(rec, 'confirming', now, price, 'dipped under the trigger, waiting for it to reclaim')
         }
       }
       break
@@ -315,7 +315,7 @@ function advance(rec: StateRecord, candidate: MomentumCandidate, now: number): S
       break
     }
     case 'failed': {
-      // Cooldown has elapsed (guarded above) — re-arm and re-anchor the trigger so
+      // Cooldown has elapsed (guarded above), re-arm and re-anchor the trigger so
       // a fresh breakout builds from the current level.
       transition(rec, 'armed', now, price, 're-armed after cooldown')
       rec.holds = 0
@@ -343,10 +343,10 @@ function confirmationContext(candidate: MomentumCandidate) {
 
 // What a *confirmed* setup means right now. Kept in one place so the copy
 // (describe) and the actual BUY/WAIT shaping (applyPhase) can never disagree.
-//   buy        — live, actionable confirmed trigger
-//   waiting    — confirmed earlier, but the live buy gate is no longer clean
-//   stop-risk  — confirmed but price is sitting on the hard stop; manage/exit
-//   extended   — confirmed and already ran past the final target; don't chase
+//   buy, live, actionable confirmed trigger
+//   waiting, confirmed earlier, but the live buy gate is no longer clean
+//   stop-risk, confirmed but price is sitting on the hard stop; manage/exit
+//   extended, confirmed and already ran past the final target; don't chase
 type ConfirmedMode = 'buy' | 'waiting' | 'stop-risk' | 'extended'
 function confirmedMode(candidate: MomentumCandidate, lockedTrigger: number | null = candidate.signal.entryTrigger): ConfirmedMode {
   const stop = candidate.signal.stopLoss
@@ -375,8 +375,8 @@ function describe(rec: StateRecord, candidate: MomentumCandidate, now: number): 
       label = `Confirming ${Math.min(held, holdsNeeded)}/${holdsNeeded}`
       detail =
         rec.failStreak > 0
-          ? `Dipped under ${triggerText} — giving it room to reclaim before this is a buy.`
-          : `Holding above ${triggerText} with ${context} — needs to keep holding before it is a buy.`
+          ? `Dipped under ${triggerText}, giving it room to reclaim before this is a buy.`
+          : `Holding above ${triggerText} with ${context}, needs to keep holding before it is a buy.`
       break
     }
     case 'confirmed': {
@@ -387,7 +387,7 @@ function describe(rec: StateRecord, candidate: MomentumCandidate, now: number): 
         detail = `Confirmed earlier but price is back on the stop near ${formatLevel(candidate.signal.stopLoss)}. If you are in, manage the stop; this is not a fresh buy.`
       } else if (mode === 'extended') {
         label = 'Confirmed · extended'
-        detail = `Already ran to the final target ${formatLevel(candidate.signal.targetTwo)}. Manage the trade you have — don't start a new chase up here.`
+        detail = `Already ran to the final target ${formatLevel(candidate.signal.targetTwo)}. Manage the trade you have, don't start a new chase up here.`
       } else if (mode === 'waiting') {
         label = 'Confirmed · waiting'
         detail = `Confirmed earlier, but buy gate is holding: ${radarBuyBlocker(candidate, trigger)}.`
@@ -402,7 +402,7 @@ function describe(rec: StateRecord, candidate: MomentumCandidate, now: number): 
     case 'failed': {
       const cd = rec.cooldownUntil && now < rec.cooldownUntil ? ` Re-arming in ~${secondsLeft(rec.cooldownUntil, now)}s.` : ''
       label = 'Failed break'
-      detail = `Tagged ${triggerText} then fell back — treat as a fake break, not a buy.${cd}`
+      detail = `Tagged ${triggerText} then fell back, treat as a fake break, not a buy.${cd}`
       break
     }
     default:
@@ -435,7 +435,7 @@ function describe(rec: StateRecord, candidate: MomentumCandidate, now: number): 
 // never as a buy), and the rich phase data rides along on `signalPhase`.
 function applyPhase(candidate: MomentumCandidate, rec: StateRecord, now: number): MomentumCandidate {
   const stability = describe(rec, candidate, now)
-  // Trigger locking is a breakout concept — it stops the high-of-day goalpost from
+  // Trigger locking is a breakout concept, it stops the high-of-day goalpost from
   // running away. A stock micro-pullback's trigger is the pause high and is *meant*
   // to track live, so for those pass the live (already micro-synced) trigger through
   // instead of the locked level; otherwise the locked breakout trigger applies.
@@ -520,7 +520,7 @@ export function applySignalStability(candidates: MomentumCandidate[], now = new 
   return out
 }
 
-// Test/utility hook — clears all confirmation memory.
+// Test/utility hook, clears all confirmation memory.
 export function resetSignalStability() {
   records.clear()
 }

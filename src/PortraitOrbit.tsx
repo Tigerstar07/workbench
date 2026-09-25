@@ -1,4 +1,4 @@
-import { RefreshCw, Sparkles, Workflow } from 'lucide-react'
+import { RefreshCw, RotateCw, Workflow } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 type Rotation = {
@@ -204,24 +204,25 @@ export function PortraitOrbit() {
             <img src="/showcase/roberts-portrait-clean.png" alt="" draggable="false" />
             <div className="front-glass">
               <span>Roberts</span>
-              <strong>AI workflow builder</strong>
+              <strong>Full-stack developer</strong>
             </div>
           </div>
           <div className="card-face card-back">
-            <span className="back-kicker">Profile card</span>
-            <h2>AI-powered operations software.</h2>
+            <span className="back-kicker">Roberts Hartmanis</span>
+            <h2>Full-stack developer in Riga.</h2>
             <p>
-              I build practical product flows around automation, review, data, and launch-ready UX.
+              Built Listio and Listio Drive. Outside those, mostly internal tools, automation and
+              trading research.
             </p>
             <div className="back-proof-grid">
               <span>React</span>
               <span>TypeScript</span>
-              <span>AI UX</span>
-              <span>Ops tools</span>
+              <span>Node.js</span>
+              <span>PostgreSQL</span>
             </div>
             <div className="back-mini">
               <Workflow size={18} />
-              <span>Marketplace, mobility, and booking automation projects.</span>
+              <span>Marketplace, ride sharing and booking automation.</span>
             </div>
           </div>
           <div className="card-face card-edge edge-left" />
@@ -232,7 +233,7 @@ export function PortraitOrbit() {
       </div>
       <div className="spin-card-controls">
         <button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={flipCard}>
-          <Sparkles size={15} />
+          <RotateCw size={15} />
           Flip
         </button>
         <button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={resetCard}>

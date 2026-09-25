@@ -68,7 +68,7 @@ export function StockAssistantPanel({
         sender: 'assistant',
         text: `👋 **Welcome to your Universal AI Assistant!**
 
-I can answer **ANY question** — from live portfolio value & stock setups to programming, science, general knowledge, finance, and daily topics.
+I can answer **ANY question**, from live portfolio value & stock setups to programming, science, general knowledge, finance, and daily topics.
 
 **Here is your live status summary:**
 - 💼 **Paper Bot Cash Balance:** ${formatMoney(bot?.account?.cash ?? 25000)}
@@ -231,7 +231,7 @@ I am your universal AI assistant. Here is your current live status:
 - 💵 **Available Cash:** ${formatMoney(paperCash)}
 - 🚀 **Confirmed Breakout Signals:** ${signalsCount} active
 
-You can ask me **ANY question** — whether about your stocks & portfolio balance, coding, science, general knowledge, or daily topics!
+You can ask me **ANY question**, whether about your stocks & portfolio balance, coding, science, general knowledge, or daily topics!
 
 ---
 🔗 **Localhost Access Link:**
@@ -364,7 +364,7 @@ Ask me about any specific country or location!
 
 1. **Grind:** Grind fresh coffee beans (medium grind for drip, fine for espresso).
 2. **Ratio:** Use about 1 to 2 tablespoons of ground coffee per 6 ounces of water.
-3. **Water Temp:** Heat water to roughly 195°F–205°F (just below boiling).
+3. **Water Temp:** Heat water to roughly 195°F-205°F (just below boiling).
 4. **Brew:** Pour water evenly over grounds and steep for 4 minutes.
 5. **Enjoy:** Serve fresh!
 
@@ -410,7 +410,7 @@ Ask me about any specific country or location!
 • **Formula:** \`Market Cap = Share Price × Total Outstanding Shares\`
 • **Bands:**
   - **Large Cap:** $10B+ (e.g. AAPL, MSFT, NVDA)
-  - **Mid Cap:** $2B – $10B
+  - **Mid Cap:** $2B, $10B
   - **Small / Micro Cap:** Under $2B
 
 ---
@@ -541,7 +541,7 @@ Ask me about any specific country or location!
       if (topMovers.length > 0) {
         output += `📈 **Top Market Movers Today:**\n`
         topMovers.forEach((c) => {
-          output += `- **${c.ticker}**: ${formatMoney(c.price)} (${formatPercent(c.changePct)}) — Score ${c.score}\n`
+          output += `- **${c.ticker}**: ${formatMoney(c.price)} (${formatPercent(c.changePct)}), Score ${c.score}\n`
         })
       }
 
@@ -637,7 +637,7 @@ The radar is continuously scanning for high-volume VWAP breakouts. When a candid
       }
 
 💡 **Risk Assessment:** ${
-        score >= 80 ? '🟢 Strong breakout structure above VWAP with high volume.' : '⚠️ Neutral setup — wait for confirmed volume trigger.'
+        score >= 80 ? '🟢 Strong breakout structure above VWAP with high volume.' : '⚠️ Neutral setup, wait for confirmed volume trigger.'
       }
 
 ---

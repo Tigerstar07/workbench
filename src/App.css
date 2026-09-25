@@ -379,11 +379,7 @@ main {
   inset: 124px -10vw auto;
   height: 220px;
   pointer-events: none;
-  background:
-    repeating-linear-gradient(90deg, rgba(12, 156, 173, 0.11) 0 1px, transparent 1px 42px),
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.76), transparent);
-  opacity: 0.65;
-  animation: lineTravel 11s linear infinite;
+  display: none;
 }
 
 .hero-copy {
@@ -394,11 +390,11 @@ main {
 
 .eyebrow {
   margin: 0 0 12px;
-  color: #0b8fa0;
-  font-size: 12px;
-  font-weight: 950;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: #0f6e62;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .hero .eyebrow {
@@ -3381,9 +3377,9 @@ main {
 }
 
 .momentum-strategy-tag.reversion {
-  color: #6d28d9;
-  background: #f3effe;
-  border: 1px solid rgba(109, 40, 217, 0.28);
+  color: #719080;
+  background: #f5f8f6;
+  border: 1px solid rgba(113, 144, 128, 0.28);
 }
 
 .momentum-strategy-tag.cap-micro-small {
@@ -4218,8 +4214,8 @@ main {
 }
 
 .paper-bot.mode-active .paper-bot-modes button.active {
-  background: #4f46e5;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+  background: #87a496;
+  box-shadow: 0 2px 8px rgba(135, 164, 150, 0.2);
 }
 
 .paper-bot.mode-turbo .paper-bot-modes button.active {
@@ -4295,10 +4291,10 @@ main {
 
 .paper-bot-mode-meter span {
   padding: 4px 10px;
-  border: 1px solid rgba(79, 70, 229, 0.08);
+  border: 1px solid rgba(135, 164, 150, 0.08);
   border-radius: 999px;
-  color: #4f46e5;
-  background: rgba(79, 70, 229, 0.03);
+  color: #87a496;
+  background: rgba(135, 164, 150, 0.03);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.4;
@@ -4325,7 +4321,7 @@ main {
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, #10b981, #4f46e5);
+  background: linear-gradient(90deg, #10b981, #87a496);
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -4464,7 +4460,7 @@ main {
 }
 
 .paper-bot-hero-card.pnl {
-  border-left: 4px solid #4f46e5;
+  border-left: 4px solid #87a496;
 }
 
 .paper-bot-stats {
@@ -4487,7 +4483,7 @@ main {
 }
 
 .paper-bot-stats svg {
-  color: #4f46e5;
+  color: #87a496;
   margin-bottom: 2px;
 }
 
@@ -4606,8 +4602,8 @@ main {
 
 .paper-bot-perf-toggle button.active {
   color: #ffffff;
-  background: #6946f2;
-  box-shadow: 0 2px 8px rgba(105, 70, 242, 0.3);
+  background: #8dab9c;
+  box-shadow: 0 2px 8px rgba(141, 171, 156, 0.3);
 }
 
 .paper-bot-equity-ranges {
@@ -4637,8 +4633,8 @@ main {
 
 .paper-bot-equity-ranges button.active {
   color: #ffffff;
-  background: #6946f2;
-  border-color: #6946f2;
+  background: #8dab9c;
+  border-color: #8dab9c;
 }
 
 .paper-bot-equity-foot {
@@ -4808,9 +4804,9 @@ main {
 
 .paper-bot-net-metrics {
   padding: 12px 16px;
-  border: 1px solid rgba(79, 70, 229, 0.15);
+  border: 1px solid rgba(135, 164, 150, 0.15);
   border-radius: 12px;
-  background: rgba(79, 70, 229, 0.02);
+  background: rgba(135, 164, 150, 0.02);
 }
 
 .paper-bot-net-metrics span {
@@ -5278,9 +5274,9 @@ main {
 }
 
 .bot-watch-facts .bot-watch-strategy.reversion {
-  border-color: rgba(124, 58, 237, 0.18);
-  color: #5b21b6;
-  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(131, 164, 148, 0.18);
+  color: #5e796c;
+  background: rgba(131, 164, 148, 0.08);
 }
 
 .bot-watch-plan {
@@ -7434,34 +7430,34 @@ main {
 
 .workspace-page.stock:has(.radar-theme-dark) {
   background:
-    radial-gradient(900px 520px at 80% 0%, rgba(124, 77, 255, 0.24), transparent 62%),
+    radial-gradient(900px 520px at 80% 0%, rgba(152, 180, 166, 0.24), transparent 62%),
     radial-gradient(740px 480px at 12% 18%, rgba(36, 220, 198, 0.12), transparent 58%),
-    linear-gradient(145deg, #080711 0%, #0e0b1d 48%, #080912 100%);
+    linear-gradient(145deg, #0b0d0c 0%, #121614 48%, #0c0e0d 100%);
 }
 
 .workspace-page.stock:has(.radar-theme-light) {
   background:
-    radial-gradient(820px 500px at 76% 0%, rgba(124, 77, 255, 0.14), transparent 62%),
+    radial-gradient(820px 500px at 76% 0%, rgba(152, 180, 166, 0.14), transparent 62%),
     radial-gradient(680px 420px at 14% 16%, rgba(45, 212, 191, 0.14), transparent 56%),
-    linear-gradient(145deg, #fbfaff 0%, #f3f5ff 54%, #eefaf7 100%);
+    linear-gradient(145deg, #fcfdfc 0%, #f8faf9 54%, #eefaf7 100%);
 }
 
 .workspace-page.stock:has(.radar-theme-dark) .workspace-top h1,
 .workspace-page.stock:has(.radar-theme-dark) .workspace-top p:not(.eyebrow) {
-  color: #f7f4ff;
+  color: #f9fafa;
 }
 
 .workspace-page.stock:has(.radar-theme-dark) .workspace-back {
-  border-color: rgba(196, 181, 253, 0.18);
-  color: #eee9ff;
-  background: rgba(15, 12, 28, 0.76);
+  border-color: rgba(211, 223, 217, 0.18);
+  color: #f2f6f4;
+  background: rgba(19, 21, 20, 0.76);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(18px);
 }
 
 .workspace-page.stock:has(.radar-theme-dark) .workspace-back:hover {
-  border-color: rgba(167, 139, 250, 0.42);
-  background: rgba(124, 77, 255, 0.28);
+  border-color: rgba(185, 204, 194, 0.42);
+  background: rgba(152, 180, 166, 0.28);
 }
 
 .workbench-panel.stock:has(.stock-radar) {
@@ -7474,16 +7470,16 @@ main {
 }
 
 .stock-radar {
-  --radar-accent: #7657ff;
-  --radar-accent-2: #a78bfa;
+  --radar-accent: #9db9ab;
+  --radar-accent-2: #b9ccc2;
   --radar-accent-3: #21dac2;
   --radar-red: #ff5d73;
   --radar-radius-xl: 26px;
   --radar-radius-lg: 20px;
   --radar-radius-md: 14px;
-  --radar-grid: rgba(124, 77, 255, 0.09);
+  --radar-grid: rgba(152, 180, 166, 0.09);
   --radar-glass: rgba(255, 255, 255, 0.72);
-  --radar-shadow: 0 26px 80px rgba(39, 31, 72, 0.14);
+  --radar-shadow: 0 26px 80px rgba(48, 55, 52, 0.14);
   --radar-motion-speed: 3.8s;
   position: relative;
   isolation: isolate;
@@ -7536,52 +7532,53 @@ main {
 }
 
 .stock-radar.radar-theme-dark {
-  --radar-bg: #080711;
-  --radar-bg-2: #0d0b1b;
-  --radar-panel: rgba(20, 18, 35, 0.78);
-  --radar-panel-2: rgba(27, 24, 45, 0.82);
-  --radar-panel-solid: #181528;
-  --radar-line: rgba(196, 181, 253, 0.16);
-  --radar-text: #f7f4ff;
-  --radar-muted: #aaa3bf;
-  --radar-soft: rgba(167, 139, 250, 0.12);
+  --radar-bg: #0b0d0c;
+  --radar-bg-2: #101312;
+  --radar-panel: rgba(20, 23, 22, 0.94);
+  --radar-panel-2: rgba(26, 30, 28, 0.95);
+  --radar-panel-solid: #171b19;
+  --radar-line: rgba(214, 224, 219, 0.12);
+  --radar-text: #eef2ef;
+  --radar-muted: #9ba5a0;
+  --radar-soft: rgba(214, 224, 219, 0.06);
   --radar-green: #38e7a7;
   --radar-green-soft: rgba(56, 231, 167, 0.13);
-  --radar-amber: #ffe66d;
-  --radar-blue: #a78bfa;
-  --radar-accent: #7657ff;
-  --radar-accent-2: #b89cff;
-  --radar-accent-3: #28e1c8;
-  --radar-grid: rgba(167, 139, 250, 0.08);
-  --radar-glass: rgba(19, 16, 32, 0.76);
-  --radar-shadow: 0 30px 110px rgba(0, 0, 0, 0.42);
+  --radar-amber: #ffd166;
+  --radar-blue: #8ab4f8;
+  --radar-accent: #f0b43c;
+  --radar-accent-2: #f3c86e;
+  --radar-accent-3: #38e7a7;
+  --radar-grid: transparent;
+  --radar-glass: rgba(20, 23, 22, 0.96);
+  --radar-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 
 .stock-radar.radar-theme-light {
-  --radar-bg: #f8f7ff;
-  --radar-bg-2: #effaf7;
-  --radar-panel: rgba(255, 255, 255, 0.82);
-  --radar-panel-2: rgba(255, 255, 255, 0.92);
+  --radar-bg: #f5f5f1;
+  --radar-bg-2: #eef2ee;
+  --radar-panel: rgba(255, 255, 255, 0.96);
+  --radar-panel-2: rgba(255, 255, 255, 0.98);
   --radar-panel-solid: #ffffff;
-  --radar-line: rgba(71, 65, 110, 0.13);
-  --radar-text: #151323;
-  --radar-muted: #6e6a82;
-  --radar-soft: rgba(105, 70, 242, 0.1);
+  --radar-line: rgba(30, 36, 33, 0.13);
+  --radar-text: #161a18;
+  --radar-muted: #5f6763;
+  --radar-soft: rgba(30, 36, 33, 0.05);
   --radar-green: #07966b;
   --radar-green-soft: rgba(7, 150, 107, 0.1);
   --radar-amber: #a16207;
-  --radar-blue: #6946f2;
-  --radar-accent: #6946f2;
-  --radar-accent-2: #8b5cf6;
-  --radar-accent-3: #0ea5a3;
-  --radar-grid: rgba(105, 70, 242, 0.07);
-  --radar-glass: rgba(255, 255, 255, 0.78);
-  --radar-shadow: 0 28px 80px rgba(63, 55, 112, 0.15);
+  --radar-blue: #2563a8;
+  --radar-accent: #9a5b0c;
+  --radar-accent-2: #b7791f;
+  --radar-accent-3: #0e8f6e;
+  --radar-grid: transparent;
+  --radar-glass: rgba(255, 255, 255, 0.97);
+  --radar-shadow: 0 16px 44px rgba(20, 24, 22, 0.09);
 }
 
 .stock-radar .eyebrow {
   color: var(--radar-accent-2);
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .stock-radar.radar-theme-light .eyebrow {
@@ -7645,7 +7642,7 @@ main {
 .stock-radar.radar-theme-light .paper-bot-grid > div,
 .stock-radar.radar-theme-light .paper-bot-pnl,
 .stock-radar.radar-theme-light .paper-bot-journal {
-  box-shadow: 0 18px 44px rgba(65, 55, 112, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 44px rgba(78, 89, 84, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .stock-radar .momentum-hero {
@@ -8920,20 +8917,20 @@ body:has(.stock-radar) {
 
 main:has(.radar-theme-dark) .brand,
 main:has(.radar-theme-dark) .site-nav nav {
-  border-color: rgba(167, 139, 250, 0.16);
-  background: rgba(18, 16, 31, 0.85);
+  border-color: rgba(185, 204, 194, 0.16);
+  background: rgba(22, 25, 24, 0.85);
   box-shadow: 
     0 20px 48px rgba(0, 0, 0, 0.28), 
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 main:has(.radar-theme-dark) .brand {
-  color: #f7f4ff;
+  color: #f9fafa;
 }
 
 main:has(.radar-theme-dark) .site-nav nav > a,
 main:has(.radar-theme-dark) .site-nav button {
-  color: #b4aed2;
+  color: #bdc3c0;
 }
 
 main:has(.radar-theme-dark) .site-nav nav > a:hover,
@@ -8941,20 +8938,20 @@ main:has(.radar-theme-dark) .site-nav button:hover,
 main:has(.radar-theme-dark) .site-nav nav > a:focus-visible,
 main:has(.radar-theme-dark) .site-nav button:focus-visible {
   color: #fff;
-  background: rgba(167, 139, 250, 0.12);
+  background: rgba(185, 204, 194, 0.12);
 }
 
 main:has(.radar-theme-light) .brand,
 main:has(.radar-theme-light) .site-nav nav {
-  border-color: rgba(71, 65, 110, 0.12);
+  border-color: rgba(83, 92, 88, 0.12);
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 
-    0 16px 36px rgba(63, 55, 112, 0.06), 
+    0 16px 36px rgba(78, 89, 84, 0.06), 
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 main:has(.radar-theme-light) .brand {
-  color: #151323;
+  color: #1a1c1b;
 }
 
 main:has(.radar-theme-light) .site-nav nav > a,
@@ -8966,24 +8963,24 @@ main:has(.radar-theme-light) .site-nav nav > a:hover,
 main:has(.radar-theme-light) .site-nav button:hover,
 main:has(.radar-theme-light) .site-nav nav > a:focus-visible,
 main:has(.radar-theme-light) .site-nav button:focus-visible {
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.08);
+  color: #83a494;
+  background: rgba(131, 164, 148, 0.08);
 }
 
 main:has(.radar-theme-dark) .brand span {
   color: #ffffff;
-  background: linear-gradient(135deg, #7657ff, #28e1c8);
-  box-shadow: 0 10px 24px rgba(118, 87, 255, 0.28);
+  background: linear-gradient(135deg, #9db9ab, #28e1c8);
+  box-shadow: 0 10px 24px rgba(157, 185, 171, 0.28);
 }
 
 main:has(.radar-theme-dark) .projects-menu {
-  border-color: rgba(196, 181, 253, 0.18);
-  background: rgba(18, 16, 31, 0.98);
+  border-color: rgba(211, 223, 217, 0.18);
+  background: rgba(22, 25, 24, 0.98);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
 }
 
 main:has(.radar-theme-dark) .projects-menu a {
-  color: #f7f4ff;
+  color: #f9fafa;
 }
 
 main:has(.radar-theme-dark) .projects-menu span {
@@ -8992,8 +8989,8 @@ main:has(.radar-theme-dark) .projects-menu span {
 
 main:has(.radar-theme-dark) .projects-menu a:hover,
 main:has(.radar-theme-dark) .projects-menu a:focus-visible {
-  border-color: rgba(184, 156, 255, 0.26);
-  background: rgba(118, 87, 255, 0.14);
+  border-color: rgba(197, 214, 206, 0.26);
+  background: rgba(157, 185, 171, 0.14);
 }
 
 /* Lower paper-bot polish: remove bright legacy seams and keep metric cards in
@@ -9046,7 +9043,7 @@ main:has(.radar-theme-dark) .projects-menu a:focus-visible {
 
 .stock-radar.radar-theme-dark .paper-bot-pnl-empty,
 .stock-radar.radar-theme-dark .paper-bot-empty {
-  background: rgba(27, 24, 45, 0.72);
+  background: rgba(33, 36, 35, 0.72);
 }
  
 /* Final dark-mode cleanup for lower bot cards: remove legacy light seams and
@@ -9061,28 +9058,28 @@ main:has(.radar-theme-dark) .projects-menu a:focus-visible {
 .stock-radar.radar-theme-dark .paper-bot-compare-card,
 .stock-radar.radar-theme-dark .paper-bot-day,
 .stock-radar.radar-theme-dark .paper-bot-day li {
-  border-color: rgba(184, 156, 255, 0.18);
+  border-color: rgba(197, 214, 206, 0.18);
   background:
-    radial-gradient(220px 120px at 100% 0%, rgba(118, 87, 255, 0.12), transparent 70%),
-    linear-gradient(145deg, rgba(26, 23, 43, 0.96), rgba(16, 14, 29, 0.98));
+    radial-gradient(220px 120px at 100% 0%, rgba(157, 185, 171, 0.12), transparent 70%),
+    linear-gradient(145deg, rgba(31, 35, 33, 0.96), rgba(20, 23, 22, 0.98));
   box-shadow: none;
 }
 
 .stock-radar.radar-theme-dark .paper-bot-hero-card,
 .stock-radar.radar-theme-dark .paper-bot-stats div {
-  border-color: rgba(86, 75, 121, 0.72) !important;
+  border-color: rgba(94, 102, 98, 0.72) !important;
 }
 
 .stock-radar.radar-theme-dark .paper-bot-hero-card.pnl {
   background:
     radial-gradient(240px 130px at 100% 0%, rgba(40, 225, 200, 0.14), transparent 70%),
-    linear-gradient(145deg, rgba(28, 31, 43, 0.96), rgba(16, 14, 29, 0.98));
+    linear-gradient(145deg, rgba(34, 37, 36, 0.96), rgba(20, 23, 22, 0.98));
 }
 
 .stock-radar.radar-theme-dark .paper-bot-stats div {
   background:
-    radial-gradient(170px 100px at 100% 0%, rgba(184, 156, 255, 0.1), transparent 72%),
-    linear-gradient(145deg, rgba(23, 20, 38, 0.98), rgba(15, 13, 26, 0.98));
+    radial-gradient(170px 100px at 100% 0%, rgba(197, 214, 206, 0.1), transparent 72%),
+    linear-gradient(145deg, rgba(27, 31, 29, 0.98), rgba(18, 21, 20, 0.98));
 }
 
 .stock-radar .paper-bot-live-strip > span:first-child b > span {
@@ -9111,14 +9108,14 @@ main:has(.radar-theme-dark) .projects-menu a:focus-visible {
 
 .stock-radar.radar-theme-dark .paper-bot-pnl-svg {
   background:
-    linear-gradient(rgba(167, 139, 250, 0.065) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167, 139, 250, 0.065) 1px, transparent 1px),
-    #100e1d;
+    linear-gradient(rgba(185, 204, 194, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(185, 204, 194, 0.065) 1px, transparent 1px),
+    #141716;
   background-size: 38px 38px, 38px 38px, auto;
 }
 
 .stock-radar.radar-theme-dark .paper-bot-equity-chart {
-  background: #100e1d;
+  background: #141716;
 }
 
 .stock-radar.radar-theme-dark .paper-bot-net-metrics,
@@ -9126,15 +9123,15 @@ main:has(.radar-theme-dark) .projects-menu a:focus-visible {
 .stock-radar.radar-theme-dark .paper-bot-net-caption,
 .stock-radar.radar-theme-dark .paper-bot-pnl-empty,
 .stock-radar.radar-theme-dark .paper-bot-empty {
-  border-color: rgba(184, 156, 255, 0.16);
-  background: rgba(22, 19, 36, 0.92);
+  border-color: rgba(197, 214, 206, 0.16);
+  background: rgba(26, 29, 28, 0.92);
 }
 
 .stock-radar.radar-theme-dark .paper-bot-calendar li,
 .stock-radar.radar-theme-dark .bot-watch-plan,
 .stock-radar.radar-theme-dark .bot-watch-plan span {
-  border-color: rgba(184, 156, 255, 0.16);
-  background: rgba(22, 19, 36, 0.92);
+  border-color: rgba(197, 214, 206, 0.16);
+  background: rgba(26, 29, 28, 0.92);
 }
 
 @media (max-width: 720px) {
@@ -9207,20 +9204,47 @@ main:has(.stock-radar) .bg-aurora .orb,
 }
 
 .stock-radar.radar-theme-dark {
-  --radar-bg: #070611;
-  --radar-bg-2: #0d0a1a;
-  --radar-panel: rgba(16, 14, 30, 0.96);
-  --radar-panel-2: rgba(25, 22, 43, 0.96);
-  --radar-line: rgba(184, 156, 255, 0.15);
-  --radar-muted: #aaa2c3;
-  --radar-grid: rgba(167, 139, 250, 0.055);
+  --radar-bg: #0b0d0c;
+  --radar-bg-2: #101312;
+  --radar-panel: rgba(20, 23, 22, 0.94);
+  --radar-panel-2: rgba(26, 30, 28, 0.95);
+  --radar-panel-solid: #171b19;
+  --radar-line: rgba(214, 224, 219, 0.12);
+  --radar-text: #eef2ef;
+  --radar-muted: #9ba5a0;
+  --radar-soft: rgba(214, 224, 219, 0.06);
+  --radar-green: #38e7a7;
+  --radar-green-soft: rgba(56, 231, 167, 0.13);
+  --radar-amber: #ffd166;
+  --radar-blue: #8ab4f8;
+  --radar-accent: #f0b43c;
+  --radar-accent-2: #f3c86e;
+  --radar-accent-3: #38e7a7;
+  --radar-grid: transparent;
+  --radar-glass: rgba(20, 23, 22, 0.96);
+  --radar-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
 }
 
 .stock-radar.radar-theme-light {
-  --radar-panel: rgba(255, 255, 255, 0.94);
-  --radar-panel-2: rgba(250, 249, 255, 0.98);
-  --radar-line: rgba(84, 73, 132, 0.13);
-  --radar-grid: rgba(105, 70, 242, 0.045);
+  --radar-bg: #f5f5f1;
+  --radar-bg-2: #eef2ee;
+  --radar-panel: rgba(255, 255, 255, 0.96);
+  --radar-panel-2: rgba(255, 255, 255, 0.98);
+  --radar-panel-solid: #ffffff;
+  --radar-line: rgba(30, 36, 33, 0.13);
+  --radar-text: #161a18;
+  --radar-muted: #5f6763;
+  --radar-soft: rgba(30, 36, 33, 0.05);
+  --radar-green: #07966b;
+  --radar-green-soft: rgba(7, 150, 107, 0.1);
+  --radar-amber: #a16207;
+  --radar-blue: #2563a8;
+  --radar-accent: #9a5b0c;
+  --radar-accent-2: #b7791f;
+  --radar-accent-3: #0e8f6e;
+  --radar-grid: transparent;
+  --radar-glass: rgba(255, 255, 255, 0.97);
+  --radar-shadow: 0 16px 44px rgba(20, 24, 22, 0.09);
 }
 
 .stock-radar .paper-bot {
@@ -9944,7 +9968,7 @@ main:has(.stock-radar) .bg-aurora .orb,
 .cpage-screen {
   width: 100%;
   height: 100%;
-  background: #1e1e2e;
+  background: #252726;
   border: 6px solid #2d2d30;
   border-radius: 8px 8px 0 0;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -9973,7 +9997,7 @@ main:has(.stock-radar) .bg-aurora .orb,
 
 .cpage-screen-line {
   height: 3px;
-  background: rgba(167, 139, 250, 0.35);
+  background: rgba(185, 204, 194, 0.35);
   border-radius: 2px;
   width: 80%;
   animation: linePulse 3s infinite alternate;
@@ -10517,7 +10541,7 @@ main:has(.stock-radar) .bg-aurora .orb,
 .stock-radar.radar-theme-light .assistant-header-card,
 .stock-radar.radar-theme-light .assistant-chat-stream,
 .stock-radar.radar-theme-light .localhost-link-banner {
-  box-shadow: 0 18px 44px rgba(65, 55, 112, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 44px rgba(78, 89, 84, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
 
 .stock-radar .assistant-badge {
@@ -10675,9 +10699,9 @@ main:has(.stock-radar) .bg-aurora .orb,
 }
 
 .stock-radar .chat-message-row.user .message-avatar {
-  background: linear-gradient(135deg, var(--radar-accent), #4f46e5);
+  background: linear-gradient(135deg, var(--radar-accent), #87a496);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(105, 70, 242, 0.25);
+  box-shadow: 0 4px 12px rgba(141, 171, 156, 0.25);
 }
 
 .stock-radar .user-avatar-initial {
@@ -10699,7 +10723,7 @@ main:has(.stock-radar) .bg-aurora .orb,
 .stock-radar .chat-message-row.user .message-bubble {
   padding: 14px 18px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--radar-accent), #4f46e5);
+  background: linear-gradient(135deg, var(--radar-accent), #87a496);
   border: 1px solid var(--radar-accent);
   color: #ffffff !important;
   font-size: 14px;
